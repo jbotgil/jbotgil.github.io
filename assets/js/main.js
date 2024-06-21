@@ -43,4 +43,4 @@ const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstra
     
     
     /* Github Activity Feed - https://github.com/caseyscarborough/github-activity */
-    GitHubActivity.feed({ username: "jbotgil", selector: "#ghfeed" });
+    GitHubActivity.feed({ username: "jbotgil", selector: "#ghfeed"});
