@@ -1,8 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, Calendar } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Experience = ({ data }) => {
+    const { t } = useTranslation();
+
     return (
         <section id="experience" className="py-20 bg-slate-900/50">
             <div className="container mx-auto px-6">
@@ -12,7 +15,7 @@ const Experience = ({ data }) => {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-4xl font-bold mb-4">Experiencia <span className="text-accent">Laboral</span></h2>
+                    <h2 className="text-3xl md:text-4xl font-bold mb-4">{t('experience.work')}</h2>
                 </motion.div>
 
                 <div className="max-w-3xl mx-auto">
@@ -29,16 +32,16 @@ const Experience = ({ data }) => {
 
                             <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
                                 <div className="flex flex-wrap justify-between items-start mb-2">
-                                    <h3 className="text-xl font-bold text-white">{job.title}</h3>
+                                    <h3 className="text-xl font-bold text-white">{t(job.title)}</h3>
                                     <span className="flex items-center text-sm text-accent bg-accent/10 px-3 py-1 rounded-full">
-                                        <Calendar size={14} className="mr-1" /> {job.period}
+                                        <Calendar size={14} className="mr-1" /> {t(job.period)}
                                     </span>
                                 </div>
                                 <h4 className="text-lg text-slate-300 mb-4 flex items-center">
                                     <Briefcase size={16} className="mr-2 text-slate-400" /> {job.company}
                                 </h4>
                                 <p className="text-slate-400 leading-relaxed">
-                                    {job.description}
+                                    {t(job.description)}
                                 </p>
                             </div>
                         </motion.div>

@@ -7,12 +7,14 @@ import Education from './components/Education';
 import Skills from './components/Skills';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import LanguageSwitcher from './components/LanguageSwitcher';
 
 function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
         <div className="bg-primary min-h-screen text-slate-200 font-sans selection:bg-accent selection:text-primary">
+            <LanguageSwitcher />
             <Hero data={portfolioData} />
             <Projects data={portfolioData} onModalChange={setIsModalOpen} />
             <Experience data={portfolioData} />

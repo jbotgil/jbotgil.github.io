@@ -2,8 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowDown, Github, Linkedin, Mail } from 'lucide-react';
 import Typewriter from './Typewriter';
+import { useTranslation } from 'react-i18next';
 
 const Hero = ({ data }) => {
+    const { t } = useTranslation();
+
     return (
         <section className="min-h-screen flex flex-col justify-center items-center relative overflow-hidden">
             {/* Background Gradient */}
@@ -51,7 +54,7 @@ const Hero = ({ data }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.2 }}
                 >
-                    <h2 className="text-lg md:text-xl text-accent font-medium mb-2">Hola, soy</h2>
+                    <h2 className="text-lg md:text-xl text-accent font-medium mb-2">{t('hero.greeting')}</h2>
                     <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
                         {data.name}
                     </h1>
@@ -59,11 +62,11 @@ const Hero = ({ data }) => {
                     {/* Typewriter Effect */}
                     <div className="text-lg md:text-xl text-slate-400 mb-6 max-w-2xl mx-auto font-mono min-h-[32px]">
                         <span className="text-accent">&gt; </span>
-                        <Typewriter words={data.roles || [data.title]} />
+                        <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
                     </div>
 
                     <p className="text-base text-slate-500 mb-8 max-w-2xl mx-auto leading-relaxed">
-                        {data.about}
+                        {t('about.description')}
                     </p>
 
                     <div className="flex justify-center gap-5 mb-10">
@@ -87,7 +90,7 @@ const Hero = ({ data }) => {
                         transition={{ duration: 2, repeat: Infinity }}
                         className="inline-flex flex-col items-center text-slate-400 hover:text-white transition-colors cursor-pointer"
                     >
-                        <span className="text-xs font-medium mb-2 uppercase tracking-wide">Ver Proyectos</span>
+                        <span className="text-xs font-medium mb-2 uppercase tracking-wide">{t('projects.viewProject')}</span>
                         <ArrowDown size={20} />
                     </motion.a>
                 </motion.div>
