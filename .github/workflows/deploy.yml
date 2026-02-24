@@ -28,7 +28,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        # Se añade el flag para saltar el error de conflicto de ESLint 10
+        # Añadimos el flag para forzar la instalación a pesar del conflicto de ESLint
         run: npm ci --legacy-peer-deps
 
       - name: Build
