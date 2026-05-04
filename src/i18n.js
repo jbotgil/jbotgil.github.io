@@ -55,7 +55,7 @@ const resources = {
             "education.dam.school": "I.E.S. Eduardo Primo Marqués",
             "education.dam.period": "sept. 2023 – jun. 2025",
 
-            "education.smr.degree": "C.F.G.M. Sistemas informáticos y redes",
+            "education.smr.degree": "C.F.G.M. Sistemas Microinformáticos y Redes",
             "education.smr.school": "I.E.S. Eduardo Primo Marqués",
             "education.smr.period": "sept. 2021 – jun. 2023",
 
