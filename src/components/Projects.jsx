@@ -30,11 +30,14 @@ const ProjectCard = ({ project, index, onClick, t }) => (
 
         <div className="p-5 flex flex-col flex-grow">
             <div className="flex flex-wrap gap-2 mb-3">
-                {project.tags.map(tag => (
-                    <span key={tag} className="text-[10px] font-mono text-accent bg-accent/10 px-2 py-0.5 rounded">
-                        {tag}
-                    </span>
-                ))}
+                {(() => {
+                    const tags = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
+                    return Array.isArray(tags) ? tags.map(tag => (
+                        <span key={tag} className="text-[10px] font-mono text-accent bg-accent/10 px-2 py-0.5 rounded">
+                            {tag}
+                        </span>
+                    )) : null;
+                })()}
             </div>
 
             {/* CORRECCIÓN AQUÍ: t(project.title) */}
@@ -89,11 +92,14 @@ const ProjectModal = ({ project, onClose, t }) => {
 
                 <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto">
                     <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tags.map(tag => (
-                            <span key={tag} className="text-xs font-mono text-accent bg-accent/10 px-3 py-1 rounded-full">
-                                {tag}
-                            </span>
-                        ))}
+                        {(() => {
+                            const tags = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
+                            return Array.isArray(tags) ? tags.map(tag => (
+                                <span key={tag} className="text-xs font-mono text-accent bg-accent/10 px-3 py-1 rounded-full">
+                                    {tag}
+                                </span>
+                            )) : null;
+                        })()}
                     </div>
 
                     {/* CORRECCIÓN AQUÍ: t(project.title) */}

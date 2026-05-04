@@ -99,14 +99,18 @@ const resources = {
             "projects.events.title": "Gestión de eventos en Android",
             "projects.login.title": "LoginWithJava",
             "projects.card.title": "Tarjeta de Presentación",
+            "projects.fuel.title": "Análisis de Precios de Combustible - Ribera Alta & La Costera",
 
             // Tecnologías (Tags)
-            "projects.cnn.tags": "Deep Learning, TensorFlow, Python, Streamlit",
-            "projects.bedrock.tags": "AI, AWS Bedrock, Python",
-            "projects.vision.tags": "Python, Computer Vision",
-            "projects.events.tags": "Kotlin, Android, Firebase",
-            "projects.login.tags": "Java, JavaFX, Maven",
-            "projects.card.tags": "Kotlin, Android",
+            "projects.cnn.tags": ["Deep Learning", "TensorFlow", "Python", "Streamlit"],
+            "projects.bedrock.tags": ["AI", "AWS Bedrock", "Python"],
+            "projects.vision.tags": ["Python", "Computer Vision"],
+            "projects.events.tags": ["Kotlin", "Android", "Firebase"],
+            "projects.login.tags": ["Java", "JavaFX", "Maven"],
+            "projects.card.tags": ["Kotlin", "Android"],
+            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
+
+            // DESTACADO TAG
             "projects.featured_tag": "Destacado",
 
             // Descripciones
@@ -116,7 +120,7 @@ const resources = {
             "projects.events.desc": "Aplicación móvil para la organización y administración de eventos. Permite la creación, edición y gestión eficiente de calendarios y asistentes en dispositivos Android.",
             "projects.login.desc": "Sistema de autenticación desarrollado con Java y JavaFX. Proporciona una interfaz intuitiva para el inicio de sesión y la gestión de usuarios mediante una arquitectura basada en Maven.",
             "projects.card.desc": "Desarrollo de una interfaz visual interactiva en Kotlin. Aplicación móvil diseñada para mostrar información de contacto de forma dinámica en el ecosistema Android.",
-
+            "projects.fuel.desc": "Herramienta ETL y dashboard interactivo para monitorizar la evolución de precios de gasolina y diésel mediante la API del Ministerio de Industria.",
             // Botones
             "projects.view_link": "Ver Proyecto"
         }
@@ -216,14 +220,19 @@ const resources = {
             "projects.events.title": "Android Event Management",
             "projects.login.title": "LoginWithJava",
             "projects.card.title": "Business Card App",
+            "projects.fuel.title": "Fuel Prices Analysis - Ribera Alta & La Costera",
 
             // Technologies (Tags)
-            "projects.cnn.tags": "Deep Learning, TensorFlow, Python, Streamlit",
-            "projects.bedrock.tags": "AI, AWS Bedrock, Python",
-            "projects.vision.tags": "Python, Computer Vision",
-            "projects.events.tags": "Kotlin, Android, Firebase",
-            "projects.login.tags": "Java, JavaFX, Maven",
-            "projects.card.tags": "Kotlin, Android",
+            "projects.cnn.tags": ["Deep Learning", "TensorFlow", "Python", "Streamlit"],
+            "projects.bedrock.tags": ["AI", "AWS Bedrock", "Python"],
+            "projects.vision.tags": ["Python", "Computer Vision"],
+            "projects.events.tags": ["Kotlin", "Android", "Firebase"],
+            "projects.login.tags": ["Java", "JavaFX", "Maven"],
+            "projects.card.tags": ["Kotlin", "Android"],
+            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
+
+
+            // FEATURED TAG
             "projects.featured_tag": "Featured",
 
             // Descriptions
@@ -233,6 +242,7 @@ const resources = {
             "projects.events.desc": "Mobile application for organizing and managing events. Enables efficient creation, editing, and management of calendars and attendees on Android devices.",
             "projects.login.desc": "Authentication system developed with Java and JavaFX. Provides an intuitive interface for login and user management using a Maven-based architecture.",
             "projects.card.desc": "Development of an interactive visual interface in Kotlin. Mobile application designed to dynamically display contact information within the Android ecosystem.",
+            "projects.fuel.desc": "ETL tool and interactive dashboard to monitor the evolution of gasoline and diesel prices through the Ministry of Industry API.",
 
             // Buttons
             "projects.view_link": "View Project"

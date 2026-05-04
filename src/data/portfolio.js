@@ -15,19 +15,27 @@ export const portfolioData = {
     // PROJECTS dentro de portfolioData
     projects: [
         {
+            "title": "projects.fuel.title",
+            "description": "projects.fuel.desc",
+            "image": "assets/images/projects/dashboardCombustible/demoDashboardCombustible.jpeg",
+            "link": "https://github.com/jbotgil/DashboardCombustibleAlzira.git",
+            "tags": "projects.fuel.tags",
+            "featured": true
+        },
+        {
             "title": "projects.cnn.title",
             "description": "projects.cnn.desc",
             "image": "assets/images/projects/cnnReciclaje/DemoClasificador.png",
             "link": "https://github.com/jbotgil/UD05_Proyecto_CNN_Reciclaje",
-            "tags": ["Deep Learning", "TensorFlow", "Python", "Streamlit"],
-            "featured": true
+            "tags": "projects.cnn.tags",
+            "featured": false
         },
         {
             "title": "projects.bedrock.title",
             "description": "projects.bedrock.desc",
             "image": "assets/images/projects/agenteEstudioPdf/DemoChatInteligente.png",
             "link": "https://github.com/jbotgil/ProyectoAmazonBedrock_AgenteParaEstudiarPorPdf",
-            "tags": ["AI", "AWS Bedrock", "Python"],
+            "tags": "projects.bedrock.tags",
             "featured": false
         },
         {
@@ -35,7 +43,7 @@ export const portfolioData = {
             "description": "projects.vision.desc",
             "image": "assets/images/projects/buscardorImagenSimilitud/image.png",
             "link": "https://github.com/jbotgil/Proyecto_PIA-Buscador-visual-por-similitud",
-            "tags": ["Python", "Computer Vision"],
+            "tags": "projects.vision.tags",
             "featured": false
         },
         {
@@ -43,7 +51,7 @@ export const portfolioData = {
             "description": "projects.events.desc",
             "image": "assets/images/projects/gestionDeEventosKotlin/preview.png",
             "link": "https://github.com/jbotgil/GestionDeEventos.git",
-            "tags": ["Kotlin", "Android", "Firebase"],
+            "tags": "projects.events.tags",
             "featured": false
         },
         {
@@ -51,7 +59,7 @@ export const portfolioData = {
             "description": "projects.login.desc",
             "image": "assets/images/projects/loginWithJavaFx/loginWithJava.png",
             "link": "https://github.com/jbotgil/LoginWithJavaFxMaven.git",
-            "tags": ["Java", "JavaFX", "Maven"],
+            "tags": "projects.login.tags",
             "featured": false
         },
         {
@@ -59,7 +67,7 @@ export const portfolioData = {
             "description": "projects.card.desc",
             "image": "assets/images/projects/tarjetaPresentacion/tarjetaPresentacion1.png",
             "link": "https://github.com/jbotgil/PresentationLetterWithKotlin.git",
-            "tags": ["Kotlin", "Android"],
+            "tags": "projects.card.tags",
             "featured": false
         }
     ],
