@@ -47,7 +47,7 @@ const resources = {
 
             // Experiencia y formación
             // Formacion académica
-            "education.ai.degree": "C.E. Intel·ligència Artificial i Big Data",
+            "education.ai.degree": "C.E. Big Data e Inteligencia Artificial",
             "education.ai.school": "I.E.S. Eduardo Primo Marqués",
             "education.ai.period": "oct. 2025 – actualidad",
 
