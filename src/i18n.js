@@ -116,6 +116,9 @@ const resources = {
             // VER CODIGO FUENTE TAG
             "projects.viewCode": "Ver Código Fuente",
 
+            // ENLACES TAG
+            "projects.links": "Enlaces",
+
             // Descripciones
             "projects.cnn.desc": "Modelo de Deep Learning basado en redes neuronales convolucionales para la identificación de materiales reciclables. Incluye análisis de arquitecturas, técnicas de Data Augmentation y despliegue interactivo mediante Streamlit.",
             "projects.bedrock.desc": "Agente inteligente impulsado por Amazon Bedrock para el análisis de documentos PDF. Facilita la interacción conversacional con el contenido de apuntes y documentos técnicos.",
@@ -240,6 +243,9 @@ const resources = {
 
             // VER CODIGO FUENTE TAG
             "projects.viewCode": "View Source Code",
+
+            // ENLACES TAG
+            "projects.links": "Links",
 
             // Descriptions
             "projects.cnn.desc": "Deep Learning model based on convolutional neural networks for identifying recyclable materials. Includes architecture analysis, Data Augmentation techniques, and interactive deployment via Streamlit.",
