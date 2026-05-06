@@ -108,10 +108,13 @@ const resources = {
             "projects.events.tags": ["Kotlin", "Android", "Firebase"],
             "projects.login.tags": ["Java", "JavaFX", "Maven"],
             "projects.card.tags": ["Kotlin", "Android"],
-            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
+            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],´
 
             // DESTACADO TAG
             "projects.featured_tag": "Destacado",
+
+            // VER CODIGO FUENTE TAG
+            "projects.viewCode": "Ver Código Fuente",
 
             // Descripciones
             "projects.cnn.desc": "Modelo de Deep Learning basado en redes neuronales convolucionales para la identificación de materiales reciclables. Incluye análisis de arquitecturas, técnicas de Data Augmentation y despliegue interactivo mediante Streamlit.",
@@ -234,6 +237,9 @@ const resources = {
 
             // FEATURED TAG
             "projects.featured_tag": "Featured",
+
+            // VER CODIGO FUENTE TAG
+            "projects.viewCode": "View Source Code",
 
             // Descriptions
             "projects.cnn.desc": "Deep Learning model based on convolutional neural networks for identifying recyclable materials. Includes architecture analysis, Data Augmentation techniques, and interactive deployment via Streamlit.",
