@@ -108,7 +108,7 @@ const resources = {
             "projects.events.tags": ["Kotlin", "Android", "Firebase"],
             "projects.login.tags": ["Java", "JavaFX", "Maven"],
             "projects.card.tags": ["Kotlin", "Android"],
-            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],´
+            "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
 
             // DESTACADO TAG
             "projects.featured_tag": "Destacado",
