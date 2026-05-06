@@ -114,7 +114,7 @@ const ProjectModal = ({ project, onClose, t }) => {
                     <div className="space-y-6">
                         <div>
                             <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">
-                                {t('projects.links_title', projects.links)}
+                                {t('projects.links', projects.links)}
                             </h3>
                             <a href={project.link} target="_blank" rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary font-bold rounded-lg hover:bg-white transition-colors">
