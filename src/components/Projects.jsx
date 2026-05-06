@@ -119,7 +119,7 @@ const ProjectModal = ({ project, onClose, t }) => {
                             <a href={project.link} target="_blank" rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-primary font-bold rounded-lg hover:bg-white transition-colors">
                                 <Github size={20} />
-                                {t('projects.view_code', project.viewCode)}
+                                {t('projects.viewCode', project.viewCode)}
                             </a>
                         </div>
                     </div>
