@@ -100,6 +100,7 @@ const resources = {
             "projects.login.title": "LoginWithJava",
             "projects.card.title": "Tarjeta de Presentación",
             "projects.fuel.title": "Análisis de Precios de Combustible - Ribera Alta & La Costera",
+            "projects.deepstudy.title": "DeepStudy AI",
 
             // Tecnologías (Tags)
             "projects.cnn.tags": ["Deep Learning", "TensorFlow", "Python", "Streamlit"],
@@ -109,6 +110,7 @@ const resources = {
             "projects.login.tags": ["Java", "JavaFX", "Maven"],
             "projects.card.tags": ["Kotlin", "Android"],
             "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
+            "projects.deepstudy.tags": ["AI", "RAG", "Docker", "Next.js", "FastAPI", "n8n", "Qdrant", "Ollama", "PostgreSQL"],
 
             // DESTACADO TAG
             "projects.featured_tag": "Destacado",
@@ -127,6 +129,8 @@ const resources = {
             "projects.login.desc": "Sistema de autenticación desarrollado con Java y JavaFX. Proporciona una interfaz intuitiva para el inicio de sesión y la gestión de usuarios mediante una arquitectura basada en Maven.",
             "projects.card.desc": "Desarrollo de una interfaz visual interactiva en Kotlin. Aplicación móvil diseñada para mostrar información de contacto de forma dinámica en el ecosistema Android.",
             "projects.fuel.desc": "Herramienta ETL y dashboard interactivo para monitorizar la evolución de precios de gasolina y diésel mediante la API del Ministerio de Industria.",
+            "projects.deepstudy.desc": "Plataforma basada en RAG que permite realizar consultas conversacionales sobre una colección de documentos PDF. Extrae información relevante de manera inteligente y estructurada mediante Large Language Models.",
+
             // Botones
             "projects.view_link": "Ver Proyecto"
         }
@@ -220,6 +224,7 @@ const resources = {
             "projects.section_title": "Projects",
 
             // Titles
+            "projects.deepstudy.title": "DeepStudy AI",
             "projects.cnn.title": "Waste Classifier with CNN",
             "projects.bedrock.title": "AI Study Agent (Amazon Bedrock)",
             "projects.vision.title": "Visual Similarity Search Engine",
@@ -229,6 +234,7 @@ const resources = {
             "projects.fuel.title": "Fuel Prices Analysis - Ribera Alta & La Costera",
 
             // Technologies (Tags)
+            "projects.deepstudy.tags": ["AI", "RAG", "Docker", "Next.js", "FastAPI", "n8n", "Qdrant", "Ollama", "PostgreSQL"],
             "projects.cnn.tags": ["Deep Learning", "TensorFlow", "Python", "Streamlit"],
             "projects.bedrock.tags": ["AI", "AWS Bedrock", "Python"],
             "projects.vision.tags": ["Python", "Computer Vision"],
@@ -255,6 +261,7 @@ const resources = {
             "projects.login.desc": "Authentication system developed with Java and JavaFX. Provides an intuitive interface for login and user management using a Maven-based architecture.",
             "projects.card.desc": "Development of an interactive visual interface in Kotlin. Mobile application designed to dynamically display contact information within the Android ecosystem.",
             "projects.fuel.desc": "ETL tool and interactive dashboard to monitor the evolution of gasoline and diesel prices through the Ministry of Industry API.",
+            "projects.deepstudy.desc": "A RAG‑based platform that enables conversational queries over a collection of PDF documents. It extracts relevant information intelligently and in a structured way using Large Language Models.",
 
             // Buttons
             "projects.view_link": "View Project"

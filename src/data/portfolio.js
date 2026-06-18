@@ -15,12 +15,20 @@ export const portfolioData = {
     // PROJECTS dentro de portfolioData
     projects: [
         {
+            "title": "projects.deepstudy.title",
+            "description": "projects.deepstudy.desc",
+            "image": "assets/images/projects/deepstudy/MenuPrincipal.png",
+            "link": "https://github.com/jbotgil/DeepStudy_AI",
+            "tags": "projects.deepstudy.tags",
+            "featured": true
+        },
+        {
             "title": "projects.fuel.title",
             "description": "projects.fuel.desc",
             "image": "assets/images/projects/dashboardCombustible/demoDashboardCombustible.jpeg",
             "link": "https://github.com/jbotgil/DashboardCombustibleAlzira.git",
             "tags": "projects.fuel.tags",
-            "featured": true
+            "featured": false
         },
         {
             "title": "projects.cnn.title",
