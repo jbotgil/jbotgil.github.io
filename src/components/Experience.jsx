@@ -40,7 +40,7 @@ const Experience = ({ data }) => {
                                 <h4 className="text-lg text-slate-300 mb-4 flex items-center">
                                     <Briefcase size={16} className="mr-2 text-slate-400" /> {job.company}
                                 </h4>
-                                <p className="text-slate-400 leading-relaxed">
+                                <p className="text-slate-400 leading-relaxed whitespace-pre-line">
                                     {t(job.description)}
                                 </p>
                             </div>

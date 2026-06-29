@@ -89,6 +89,12 @@ export const portfolioData = {
     ],
     experience: [
         {
+            title: "experience.xanfra.title",
+            company: "XANFRA CENTRO ODONTOTECNICO SL",
+            period: "experience.xanfra.period",
+            description: "experience.xanfra.desc"
+        },
+        {
             title: "experience.seipasa.title",
             company: "SEIPASA",
             period: "mar. 2025 - jun. 2025",

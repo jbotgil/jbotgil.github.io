@@ -39,6 +39,10 @@ const resources = {
             "experience.education": "Formación Académica",
 
             // Experiencia laboral
+            "experience.xanfra.title": "Programador full stack",
+            "experience.xanfra.period": "jun. 2026 - actualidad · 1 mes",
+            "experience.xanfra.desc": "Alzira, Comunidad Valenciana / Comunitat Valenciana, España · Presencial\n\nRol híbrido enfocado en la gestión operativa diaria y la transformación digital interna mediante el desarrollo de software.\n\nResponsabilidades tecnológicas:\n• Diseño, arquitectura y desarrollo desde cero de una aplicación web destinada a centralizar y sincronizar las órdenes de trabajo entre los diferentes dispositivos del centro.\n• Implementación de la lógica del servidor, gestión de bases de datos y desarrollo de la interfaz de usuario adaptada.\n• Aseguramiento de la sincronización de datos mediante WebSockets para garantizar la consistencia en tiempo real.\n\nStack tecnológico: Python, FastAPI, JavaScript, React, WebSockets, Docker, PostgreSQL.\n\nResponsabilidades administrativas:\n• Coordinación de flujos de trabajo internos y registro de datos en sistemas de gestión.",
+
             "experience.seipasa.title": "Desarrollador de Software Junior",
             "experience.seipasa.desc": "Desarrollo de software para la automatización de procesos en el sector agrícola.",
 
@@ -171,6 +175,10 @@ const resources = {
             "experience.education": "Education",
 
             // Work Experience
+            "experience.xanfra.title": "Full Stack Developer",
+            "experience.xanfra.period": "Jun 2026 - Present · 1 month",
+            "experience.xanfra.desc": "Alzira, Valencian Community, Spain · On-site\n\nHybrid role focused on daily operational management and internal digital transformation through software development.\n\nTech Responsibilities:\n• End-to-end design, architecture, and development of a web application to centralize and synchronize work orders across center devices.\n• Implementation of server-side logic, database management, and customized user interface development.\n• Ensuring data synchronization via WebSockets to guarantee real-time consistency.\n\nTech Stack: Python, FastAPI, JavaScript, React, WebSockets, Docker, PostgreSQL.\n\nAdministrative Responsibilities:\n• Coordination of internal workflows and data logging in management systems.",
+
             "experience.seipasa.title": "Junior Software Developer",
             "experience.seipasa.desc": "Software development for process automation in the agricultural sector.",
 
