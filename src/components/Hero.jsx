@@ -8,7 +8,7 @@ const Hero = ({ data }) => {
     const { t } = useTranslation();
 
     return (
-        <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-32 md:pt-40 pb-16 md:pb-24">
+        <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-10 md:pt-14 lg:pt-16 pb-16 md:pb-24 lg:pb-32 min-h-screen">
             {/* Resplandor suave editorial */}
             <div className="pointer-events-none absolute -top-24 -right-24 sm:-top-40 sm:-right-40 h-[360px] w-[360px] sm:h-[560px] sm:w-[560px] rounded-full bg-brand-violet/12 blur-[100px] sm:blur-[130px]" />
             <div className="pointer-events-none absolute top-1/2 sm:top-1/3 -left-24 sm:-left-40 h-[280px] w-[280px] sm:h-[420px] sm:w-[420px] rounded-full bg-brand-cyan/8 blur-[80px] sm:blur-[120px]" />
@@ -20,15 +20,20 @@ const Hero = ({ data }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
+<<<<<<< HEAD
                     <span className="kicker mb-6 inline-block">{t('hero.greeting')}</span>
                     <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
+=======
+                    <span className="kicker mb-2 inline-block">{t('hero.greeting')}</span>
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
+>>>>>>> 7ac8a513f51277078377f47e24eda26a9a62c51a
                         {data.name}
                     </h1>
-                    <div className="text-lg md:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
+                    <div className="text-base md:text-lg lg:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
                         <span className="text-brand-violet">&gt;</span>{' '}
                         <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
                     </div>
-                    <p className="max-w-md text-base md:text-lg leading-relaxed text-slate-500 dark:text-slate-400 mb-9">
+                    <p className="max-w-lg text-base md:text-lg leading-relaxed text-slate-500 dark:text-slate-400 mb-9">
                         {t('about.description')}
                     </p>
 

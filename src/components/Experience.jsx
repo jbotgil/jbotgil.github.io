@@ -21,7 +21,7 @@ const Experience = ({ data }) => {
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true, margin: '-40px' }}
                             transition={{ duration: 0.45, delay: index * 0.08 }}
-                            className="relative pb-12 pl-10 last:pb-0"
+                            className="relative pb-8 pl-8 md:pb-12 md:pl-10 last:pb-0"
                         >
                             <span className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full bg-brand-violet" />
                             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">

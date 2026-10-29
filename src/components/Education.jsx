@@ -14,7 +14,7 @@ const Education = ({ data }) => {
                     <div className="rule-line" />
                 </div>
 
-                <div className="grid gap-10 lg:grid-cols-2">
+                <div className="grid gap-8 lg:gap-10 lg:grid-cols-2">
                     {/* Formación */}
                     <div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-8">{t('experience.education')}</h3>
