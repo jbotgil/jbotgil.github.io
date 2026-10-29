@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, Github, Workflow } from 'lucide-react';
+import { Github, Workflow } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const AUTOMATIONS = ['n8n', 'Docker', 'Shell', 'Python'];
@@ -9,14 +9,6 @@ const About = ({ data }) => {
     const { t } = useTranslation();
 
     const tiles = [
-        {
-            content: (
-                <>
-                    <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2">{t('about.summary_heading')}</h3>
-                    <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400 line-clamp-4">{t('about.card_bio')}</p>
-                </>
-            ),
-        },
         {
             href: data.social.github,
             content: (
@@ -73,40 +65,30 @@ const About = ({ data }) => {
                     <div className="rule-line" />
                 </div>
 
-                <div className="grid gap-10 lg:grid-cols-[0.42fr_0.58fr]">
-                    {/* Tiles */}
-                    <div className="grid grid-cols-2 gap-3">
-                        {tiles.map((tile, index) => (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 14 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, margin: '-50px' }}
-                                transition={{ duration: 0.4, delay: index * 0.05 }}
-                                className="card card-hover p-5"
-                            >
-                                {tile.content}
-                            </motion.div>
-                        ))}
-                    </div>
+                <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.5 }}
+                    className="max-w-3xl text-xl md:text-2xl leading-relaxed text-slate-700 dark:text-slate-200 mb-12"
+                >
+                    {t('about.description')}
+                </motion.p>
 
-                    {/* Descripción principal */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: '-80px' }}
-                        transition={{ duration: 0.5 }}
-                        className="lg:pt-2"
-                    >
-                        <p className="text-xl md:text-2xl leading-relaxed text-slate-700 dark:text-slate-200">
-                            {t('about.description')}
-                        </p>
-                        <a href={data.social.github} target="_blank" rel="noopener noreferrer"
-                            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-brand-violet hover:text-brand-indigo transition-colors">
-                            {t('about.cta_github')}
-                            <ArrowUpRight size={16} />
-                        </a>
-                    </motion.div>
+                {/* Tiles */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {tiles.map((tile, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, y: 14 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: '-50px' }}
+                            transition={{ duration: 0.4, delay: index * 0.05 }}
+                            className="card card-hover p-5"
+                        >
+                            {tile.content}
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>

@@ -69,31 +69,30 @@ const Hero = ({ data }) => {
                     </div>
                 </motion.div>
 
-                {/* Foto */}
+                {/* Foto circular */}
                 <motion.div
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                    className="relative mx-auto w-full max-w-xs sm:max-w-sm"
+                    className="relative mx-auto w-full max-w-[260px] sm:max-w-[300px] text-center"
                 >
-                    <div className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-2xl" />
-                    <div className="relative overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-slate-100 shadow-card-lg dark:border-white/10 dark:bg-white/5 aspect-square">
-                        <img src="/assets/images/profile.png" alt={data.name} className="h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-3xl" />
 
-                        {/* Nombre en la foto */}
-                        <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-2xl bg-white/85 px-4 py-3 backdrop-blur-md dark:bg-[#0d0d16]/75 dark:border dark:border-white/10">
-                            <div className="min-w-0">
-                                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{data.name}</p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400">{t('hero.role1')}</p>
-                            </div>
-                        </div>
+                    {/* Anillo de gradiente */}
+                    <div className="rounded-full p-1.5 shadow-card-lg" style={{ background: 'linear-gradient(135deg, #6d5cf6, #22d3ee)' }}>
+                        <img src="/assets/images/profile.png" alt={data.name} className="aspect-square w-full rounded-full object-cover border-4 border-[#f9fafc] dark:border-[#09090f]" />
+                    </div>
 
-                        {/* Badge flotante */}
-                        <div className="absolute right-3 top-3 rounded-full px-3 py-1.5 text-[11px] font-mono font-bold text-white"
-                            style={{ background: 'linear-gradient(135deg, #6d5cf6, #5b5bd6)' }}>
-                            AI · Big Data
-                        </div>
+                    {/* Badge flotante */}
+                    <div className="absolute right-1 top-6 rounded-full px-3 py-1.5 text-[11px] font-mono font-bold text-white shadow-card"
+                        style={{ background: 'linear-gradient(135deg, #6d5cf6, #5b5bd6)' }}>
+                        AI · Big Data
+                    </div>
+
+                    {/* Nombre y rol */}
+                    <div className="mt-6">
+                        <p className="text-base font-bold text-slate-900 dark:text-white">{data.name}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{t('hero.role1')}</p>
                     </div>
                 </motion.div>
             </div>
