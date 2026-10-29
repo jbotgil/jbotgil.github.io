@@ -43,7 +43,7 @@ const Nav = () => {
             className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${scrolled ? 'glass shadow-glass-lg' : 'bg-transparent border-transparent backdrop-blur-none'}`}
             style={{ borderRadius: '9999px', padding: '10px' }}
         >
-            <div className="flex items-center gap-2 px-1">
+            <div className="flex items-center gap-2.5 px-1">
                 {/* Wordmark */}
                 <a href="#top" className="hidden md:flex items-center gap-2 mr-3 pl-2 text-sm font-bold text-slate-800 dark:text-white">
                     <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan grid place-items-center text-white text-xs font-extrabold shadow-lg overflow-hidden">
@@ -53,7 +53,7 @@ const Nav = () => {
                 </a>
 
                 {/* Desktop links */}
-                <div className="hidden md:flex items-center">
+                <div className="hidden md:flex items-center gap-1">
                     {links.map((l) => <LinkItem key={l.href} {...l} />)}
                 </div>
 

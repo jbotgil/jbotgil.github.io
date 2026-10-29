@@ -53,15 +53,15 @@ function makeCarpetTexture() {
     c.width = c.height = 256;
     const g = c.getContext('2d');
     const grad = g.createRadialGradient(128, 128, 10, 128, 128, 124);
-    grad.addColorStop(0, '#3d4a78');
-    grad.addColorStop(0.6, '#2c3558');
-    grad.addColorStop(1, '#232b49');
+    grad.addColorStop(0, '#4a5889');
+    grad.addColorStop(0.6, '#39446c');
+    grad.addColorStop(1, '#2e3758');
     g.fillStyle = grad;
     g.beginPath();
     g.arc(128, 128, 124, 0, Math.PI * 2);
     g.fill();
     for (let i = 0; i < 26; i++) {
-        g.strokeStyle = `rgba(150,170,230,${0.12})`;
+        g.strokeStyle = `rgba(170,190,240,${0.05})`;
         g.beginPath();
         g.arc(128, 128, 18 + i * 4, 0, Math.PI * 2);
         g.stroke();
@@ -83,6 +83,27 @@ function makeCityTexture() {
         const y = (i * 7) % 120;
         g.fillRect(x, y, 3, 2);
     }
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+}
+
+/* Terminal con código para el monitor secundario */
+function makeTerminalTexture() {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 160;
+    const g = c.getContext('2d');
+    g.fillStyle = '#0b0e18';
+    g.fillRect(0, 0, 256, 160);
+    const colors = ['#22d3ee', '#c084fc', '#34d399', '#f0abfc', '#94a3b8', '#38bdf8', '#fbbf24'];
+    for (let i = 0; i < 16; i++) {
+        g.fillStyle = colors[i % colors.length];
+        g.globalAlpha = 0.55 + (i % 4) * 0.1;
+        g.fillRect(8, 10 + i * 9, 20 + ((i * 37) % 120), 3);
+    }
+    g.globalAlpha = 1;
+    g.fillStyle = '#4ade80';
+    g.fillRect(8, 10 + 6 * 9 + 3, 4, 4);
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     return tex;
@@ -131,7 +152,7 @@ function ProjectSlideshow({ textures, titleKey, t, colors, name }) {
                 <planeGeometry args={[1.7, 1.05]} />
                 <meshBasicMaterial ref={matB} transparent toneMapped={false} opacity={0} />
             </mesh>
-            <Html center position={[0, -0.85, 0]} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
+            <Html center position={[0, -0.62, 0]} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
                 <div ref={label}
                     className="whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur-md"
                     style={{ background: 'rgba(12,14,30,0.72)', color: '#fff', border: '1px solid #8b5cf688' }}
@@ -187,17 +208,17 @@ function DeskLamp({ dark }) {
             </mesh>
             <mesh position={[0, 1.1, 0.72]}>
                 <sphereGeometry args={[0.09, 14, 14]} />
-                <meshStandardMaterial emissive="#ffd9a0" emissiveIntensity={3} color="#1a160a" />
+                <meshStandardMaterial emissive="#ffd9a0" emissiveIntensity={1.4} color="#1a160a" />
             </mesh>
-            <pointLight ref={lightRef} position={[0, 1.05, 0.85]} intensity={dark ? 7 : 3} distance={7} decay={2} color="#ffc98a" />
+            <pointLight ref={lightRef} position={[0, 1.05, 0.85]} intensity={dark ? 4.2 : 2.2} distance={6.5} decay={2} color="#ffc98a" />
         </group>
     );
 }
 
 /* ---- Teclado mecánico ---- */
 function MechanicalKeyboard({ dark }) {
-    const keyColor = dark ? '#1b1e34' : '#282c48';
-    const capColor = dark ? '#0e1020' : '#3a3f60';
+    const keyColor = dark ? '#2a3050' : '#343a60';
+    const capColor = dark ? '#1d2138' : '#3a3f60';
     const rows = [0, 1, 2, 3];
     return (
         <group>
@@ -226,7 +247,7 @@ function Mouse({ dark }) {
     return (
         <group>
             <RoundedBox args={[0.09, 0.035, 0.15]} radius={0.02} smoothness={2}>
-                <meshStandardMaterial color={dark ? '#0e1020' : '#262a45'} roughness={0.4} />
+                <meshStandardMaterial color={dark ? '#1d2138' : '#2c3254'} roughness={0.4} />
             </RoundedBox>
             <mesh position={[0, 0.026, -0.02]}>
                 <cylinderGeometry args={[0.012, 0.012, 0.02, 10]} />
@@ -236,8 +257,9 @@ function Mouse({ dark }) {
     );
 }
 
-/* ---- Monitor secundario inclinado ---- */
+/* ---- Monitor secundario inclinado (con terminal) ---- */
 function SideScreen({ dark, position, rotationY }) {
+    const terminal = useMemo(() => makeTerminalTexture(), []);
     return (
         <group position={position} rotation={[0, rotationY, 0]}>
             <mesh position={[0, 0.02, 0]}>
@@ -253,7 +275,7 @@ function SideScreen({ dark, position, rotationY }) {
             </RoundedBox>
             <mesh position={[0, 0.42, 0.04]}>
                 <planeGeometry args={[0.85, 0.5]} />
-                <meshBasicMaterial color={dark ? '#9fb0ff' : '#c7d2fe'} transparent opacity={0.85} />
+                <meshBasicMaterial map={terminal} toneMapped={false} />
             </mesh>
         </group>
     );
@@ -321,8 +343,8 @@ function NightRoom({ dark }) {
     const wood = useMemo(() => makeWoodTexture(), []);
     const carpet = useMemo(() => makeCarpetTexture(), []);
     const city = useMemo(() => makeCityTexture(), []);
-    const wall = dark ? '#181a2c' : '#33375a';
-    const bg = dark ? '#0b0e1e' : '#232846';
+    const wall = dark ? '#232741' : '#3c4266';
+    const bg = dark ? '#0e1120' : '#2b3150';
 
     return (
         <group>
@@ -344,16 +366,16 @@ function NightRoom({ dark }) {
             {/* Paredes laterales */}
             <mesh position={[-5, 1.9, -0.4]} rotation={[0, Math.PI / 2, 0]} receiveShadow>
                 <planeGeometry args={[5.8, 3.8]} />
-                <meshStandardMaterial color={dark ? '#151729' : '#2c3150'} roughness={0.9} />
+                <meshStandardMaterial color={dark ? '#1c2038' : '#343a5c'} roughness={0.9} />
             </mesh>
             <mesh position={[5, 1.9, -0.4]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
                 <planeGeometry args={[5.8, 3.8]} />
-                <meshStandardMaterial color={dark ? '#151729' : '#2c3150'} roughness={0.9} />
+                <meshStandardMaterial color={dark ? '#1c2038' : '#343a5c'} roughness={0.9} />
             </mesh>
             {/* Rodapié */}
             <mesh position={[0, 0.06, -3.26]}>
                 <boxGeometry args={[10, 0.12, 0.05]} />
-                <meshStandardMaterial color={dark ? '#0d0f1c' : '#1e2238'} roughness={0.7} />
+                <meshStandardMaterial color={dark ? '#101322' : '#262b48'} roughness={0.7} />
             </mesh>
 
             {/* Ventana de noche con ciudad */}
@@ -407,7 +429,7 @@ function NightDesk({ dark }) {
             ))}
             {/* Alfombrilla */}
             <RoundedBox args={[1.9, 0.012, 0.6]} radius={0.02} smoothness={2} position={[0, 0.675, 0.24]}>
-                <meshStandardMaterial color={dark ? '#0a0b14' : '#14172a'} roughness={0.9} />
+                <meshStandardMaterial color={dark ? '#14172c' : '#1a1d34'} roughness={0.9} />
             </RoundedBox>
             {/* Teclado mecánico */}
             <group position={[0, 0.69, 0.2]}>
@@ -461,8 +483,9 @@ function NightOffice({ projects, t, dark }) {
             <group position={[-1.7, 0.68, 0.2]}>
                 <HeadsetStand dark={dark} />
             </group>
-            <Plant position={[-4.4, 0, -1.6]} scale={1.1} />
-            <Plant position={[4.5, 0, -1.4]} scale={0.85} />
+            {/* Plantas recortadas (E013) - reposicionadas */}
+            <Plant position={[-4.6, 0, -2.8]} scale={1.1} />
+            <Plant position={[4.7, 0, -2.6]} scale={0.85} />
         </group>
     );
 }
@@ -470,7 +493,7 @@ function NightOffice({ projects, t, dark }) {
 const Experience3D = ({ projects, t }) => {
     const { theme } = useTheme();
     const dark = theme === 'dark';
-    const bg = dark ? '#0b0e1e' : '#232846';
+    const bg = dark ? '#0e1120' : '#2b3150';
 
     return (
         <Canvas
@@ -481,12 +504,12 @@ const Experience3D = ({ projects, t }) => {
             style={{ position: 'absolute', inset: 0 }}
         >
             <color attach="background" args={[bg]} />
-            <fog attach="fog" args={[bg, 8, 15]} />
-            <ambientLight intensity={dark ? 0.45 : 0.5} color="#6b76ba" />
+            <fog attach="fog" args={[bg, 9.5, 17.5]} />
+            <ambientLight intensity={dark ? 0.75 : 0.8} color="#7c88c8" />
             <directionalLight
                 position={[-3, 5, 4]}
-                intensity={dark ? 0.35 : 0.5}
-                color="#bcc4ff"
+                intensity={dark ? 0.55 : 0.7}
+                color="#c4ccff"
                 castShadow
                 shadow-mapSize={[512, 512]}
                 shadow-camera-left={-6}
@@ -494,7 +517,7 @@ const Experience3D = ({ projects, t }) => {
                 shadow-camera-top={6}
                 shadow-camera-bottom={-6}
             />
-            {dark && <pointLight position={[0, 2.6, 1.5]} intensity={2} distance={9} color="#8b9cff" />}
+            {dark && <pointLight position={[0, 2.6, 1.5]} intensity={3} distance={10} color="#8b9cff" />}
             <NightOffice projects={projects} t={t} dark={dark} />
             <OrbitControls
                 enableZoom={false}

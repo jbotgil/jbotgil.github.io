@@ -43,6 +43,7 @@ const Hero = ({ data }) => {
     const { t } = useTranslation();
     const sceneRef = useRef(null);
     const [visible, setVisible] = useState(true);
+    const [isDesktop, setIsDesktop] = useState(true);
     const webglOk = useMemo(() => supportsWebGL(), []);
 
     useEffect(() => {
@@ -53,7 +54,16 @@ const Hero = ({ data }) => {
         return () => obs.disconnect();
     }, []);
 
-    const show3D = webglOk && visible;
+    // En móviles y pantallas pequeñas no renderizamos la escena pesada
+    useEffect(() => {
+        const mq = window.matchMedia('(min-width: 768px)');
+        const on = () => setIsDesktop(mq.matches);
+        on();
+        mq.addEventListener('change', on);
+        return () => mq.removeEventListener('change', on);
+    }, []);
+
+    const show3D = webglOk && visible && isDesktop;
 
     return (
         <section id="top" className="relative min-h-screen flex items-stretch overflow-hidden">
@@ -73,49 +83,52 @@ const Hero = ({ data }) => {
             {/* Transición suave a la siguiente sección */}
             <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#f4f6fb] dark:to-[#07060f] pointer-events-none" />
 
-            {/* Overlay de contenido (no bloquea la interacción 3D salvo botones) */}
-            <div className="relative flex-1 px-6 pointer-events-none">
-                {/* Contenido principal arriba-izquierda */}
+            {/* Overlay de contenido (no bloquea la interacción 3D salvo el panel) */}
+            <div className="relative flex-1 px-4 md:px-12 pointer-events-none">
+                {/* Contenido principal en panel separado de la escena */}
                 <motion.div
                     initial={{ opacity: 0, y: -24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="relative z-10 flex min-h-screen flex-col justify-center mr-auto max-w-lg"
+                    className="relative z-10 flex min-h-screen items-center"
                 >
-                    <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3 drop-shadow">
-                        {t('hero.greeting')}
-                    </h2>
-                    <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] mb-4">
-                        {data.name}
-                    </h1>
-                    <div className="text-lg md:text-2xl font-mono text-slate-200 mb-6 min-h-[32px] drop-shadow">
-                        <span className="text-brand-sky">&gt;</span>{' '}
-                        <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
-                    </div>
-                    <p className="text-sm md:text-base text-slate-300 max-w-lg leading-relaxed mb-8">
-                        {t('about.description')}
-                    </p>
+                    <div className="pointer-events-auto w-full max-w-xl rounded-3xl border border-white/10 bg-[#0a0c1c]/60 p-6 md:p-10 backdrop-blur-xl shadow-glass-lg">
+                        <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3">
+                            {t('hero.greeting')}
+                        </h2>
+                        <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white text-balance mb-4">
+                            {data.name}
+                        </h1>
+                        <div className="text-lg md:text-xl font-mono text-slate-200 mb-6 min-h-[32px]">
+                            <span className="text-brand-sky">&gt;</span>{' '}
+                            <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
+                        </div>
+                        <p className="text-sm md:text-base text-slate-300 leading-relaxed mb-8 max-w-lg">
+                            {t('about.description')}
+                        </p>
 
-                    <div className="flex flex-wrap items-center gap-3 pointer-events-auto">
-                        <a href={`mailto:${data.email}`} className="btn-primary">
-                            <Send size={17} />
-                            {t('hero.contactMe')}
-                        </a>
-                        <a href="#projects"
-                            className="inline-flex items-center gap-2 font-semibold rounded-full px-6 py-2.5 text-sm bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 transition-all duration-300">
-                            {t('projects.viewProject')}
-                            <ArrowDown size={16} />
-                        </a>
-                        <div className="flex items-center gap-2">
-                            <a href={data.social.github} target="_blank" rel="noopener noreferrer"
+                        <div className="flex flex-wrap items-center gap-3">
+                            <a href={`mailto:${data.email}`} className="btn-primary">
+                                <Send size={17} />
+                                {t('hero.contactMe')}
+                            </a>
+                            <a href="#projects"
+                                className="inline-flex items-center gap-2 font-semibold rounded-full px-6 py-2.5 text-sm bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 transition-all duration-300">
+                                {t('projects.viewProject')}
+                                <ArrowDown size={16} />
+                            </a>
+                        </div>
+
+                        <div className="flex items-center gap-3 mt-5 pt-5 border-t border-white/10">
+                            <a href={data.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
                                 className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
                                 <Github size={18} />
                             </a>
-                            <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer"
+                            <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
                                 className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
                                 <Linkedin size={18} />
                             </a>
-                            <a href={`mailto:${data.email}`}
+                            <a href={`mailto:${data.email}`} aria-label="Correo"
                                 className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
                                 <Mail size={18} />
                             </a>
