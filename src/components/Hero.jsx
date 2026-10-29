@@ -92,7 +92,7 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="relative z-10 flex min-h-screen flex-col justify-center pb-16 mr-auto max-w-xl"
+                    className="relative z-10 flex min-h-screen flex-col justify-end pb-20 md:pb-16 mr-auto max-w-lg"
                 >
                     <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3 drop-shadow">
                         {t('hero.greeting')}
