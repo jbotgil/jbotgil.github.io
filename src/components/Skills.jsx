@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Coffee, Smartphone, Layout, Code2, Database, Terminal, Code } from 'lucide-react';
+import { Coffee, Smartphone, Layout, Code2, Database, Terminal, Code, Wrench } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Skills = ({ data }) => {
@@ -19,38 +19,23 @@ const Skills = ({ data }) => {
         }
     };
 
-    const getHoverColor = (name) => {
+    const getColors = (name) => {
         switch (name.toLowerCase()) {
-            case 'java': return { bg: "rgba(251, 146, 60, 0.1)", border: "rgba(251, 146, 60, 0.5)" };
-            case 'python': return { bg: "rgba(250, 204, 21, 0.1)", border: "rgba(250, 204, 21, 0.5)" };
-            case 'kotlin': return { bg: "rgba(192, 132, 252, 0.1)", border: "rgba(192, 132, 252, 0.5)" };
-            case 'html5/css3': return { bg: "rgba(96, 165, 250, 0.1)", border: "rgba(96, 165, 250, 0.5)" };
-            case 'javascript': return { bg: "rgba(253, 224, 71, 0.1)", border: "rgba(253, 224, 71, 0.5)" };
-            case 'sql': return { bg: "rgba(52, 211, 153, 0.1)", border: "rgba(52, 211, 153, 0.5)" };
-            default: return { bg: "rgba(56, 189, 248, 0.1)", border: "rgba(56, 189, 248, 0.5)" };
+            case 'java': return { icon: "text-orange-400", glow: "rgba(251, 146, 60, 0.45)", ring: "rgba(251, 146, 60, 0.35)" };
+            case 'python': return { icon: "text-yellow-400", glow: "rgba(250, 204, 21, 0.45)", ring: "rgba(250, 204, 21, 0.35)" };
+            case 'kotlin': return { icon: "text-purple-400", glow: "rgba(192, 132, 252, 0.45)", ring: "rgba(192, 132, 252, 0.35)" };
+            case 'html5/css3': return { icon: "text-blue-400", glow: "rgba(96, 165, 250, 0.45)", ring: "rgba(96, 165, 250, 0.35)" };
+            case 'javascript': return { icon: "text-yellow-300", glow: "rgba(253, 224, 71, 0.45)", ring: "rgba(253, 224, 71, 0.35)" };
+            case 'sql': return { icon: "text-emerald-400", glow: "rgba(52, 211, 153, 0.45)", ring: "rgba(52, 211, 153, 0.35)" };
+            default: return { icon: "text-brand-sky", glow: "rgba(56, 189, 248, 0.45)", ring: "rgba(56, 189, 248, 0.35)" };
         }
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
     };
 
     return (
         <section id="skills" className="py-24 relative overflow-hidden">
             {/* Background decorative elements */}
-            <div className="absolute top-1/2 left-0 w-96 h-96 bg-accent/5 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
-            <div className="absolute top-1/2 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+            <div className="absolute top-1/2 left-0 w-96 h-96 rounded-full bg-brand-sky/5 blur-[120px] -translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+            <div className="absolute top-1/2 right-0 w-96 h-96 rounded-full bg-brand-pink/5 blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
             <div className="container mx-auto px-6 relative z-10">
                 <motion.div
@@ -59,8 +44,11 @@ const Skills = ({ data }) => {
                     viewport={{ once: true, margin: "-100px" }}
                     className="text-center mb-16"
                 >
-                    <h2 className="text-3xl md:text-5xl font-bold mb-6">
-                        {t('skills.title')} <span className="text-accent">{t('skills.subtitle')}</span>
+                    <span className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-sm text-brand-sky mb-4">
+                        <Wrench size={14} /> {t('skills.title')}
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
+                        <span className="text-gradient animate-gradient-x">{t('skills.subtitle')}</span>
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto text-lg">
                         {t('skills.description')}
@@ -68,32 +56,41 @@ const Skills = ({ data }) => {
                 </motion.div>
 
                 <motion.div
-                    variants={containerVariants}
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-50px" }}
+                    variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.08 } } }}
                     className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-6xl mx-auto"
                 >
                     {data.skills.map((skill, index) => {
-                        const colors = getHoverColor(skill.name);
+                        const c = getColors(skill.name);
                         return (
                             <motion.div
                                 key={index}
-                                variants={itemVariants}
-                                whileHover={{
-                                    y: -8,
-                                    backgroundColor: colors.bg,
-                                    borderColor: colors.border,
-                                    boxShadow: `0 10px 30px -10px ${colors.bg}`
+                                variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } } }}
+                                whileHover={{ y: -10, scale: 1.03 }}
+                                className="flex flex-col items-center justify-center p-6 glass rounded-2xl cursor-pointer transition-all duration-300 group"
+                                style={{ '--glow': c.glow, '--ring': c.ring }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.boxShadow = `0 20px 40px -12px ${c.glow}`;
+                                    e.currentTarget.style.borderColor = c.ring;
                                 }}
-                                className="flex flex-col items-center justify-center p-8 bg-slate-800/40 border border-slate-700/50 rounded-2xl backdrop-blur-sm cursor-pointer transition-all duration-300 group"
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.boxShadow = '';
+                                    e.currentTarget.style.borderColor = '';
+                                }}
                             >
-                                <motion.div
-                                    className="transform transition-transform duration-300 group-hover:scale-110"
-                                >
+                                {/* Nivel superior */}
+                                <div className={`transform transition-transform duration-300 group-hover:scale-110 ${c.icon}`}>
                                     {getIcon(skill.name)}
-                                </motion.div>
+                                </div>
                                 <span className="font-semibold text-slate-200 tracking-wide text-center">{skill.name}</span>
+                                <div className="w-full mt-4 h-1 rounded-full bg-white/10 overflow-hidden">
+                                    <div
+                                        className="h-full rounded-full transition-all duration-500 group-hover:w-full"
+                                        style={{ width: `${skill.level}%`, background: `linear-gradient(90deg, ${c.ring}, ${c.glow})` }}
+                                    />
+                                </div>
                             </motion.div>
                         );
                     })}
