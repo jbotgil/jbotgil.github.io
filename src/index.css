@@ -63,6 +63,26 @@
 }
 
 @layer utilities {
+    /* Marcador infinito (marquee) */
+    .marquee-track {
+        display: flex;
+        width: max-content;
+        animation: marquee 38s linear infinite;
+    }
+    .marquee-track:hover {
+        animation-play-state: paused;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .marquee-track {
+            animation: none;
+        }
+    }
+    @keyframes marquee {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
     /* Retícula sutil de fondo */
     .bg-grid {
         background-image:
