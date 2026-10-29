@@ -1,13 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, useTexture } from '@react-three/drei';
+import { OrbitControls, Html, useTexture, RoundedBox, SoftShadows } from '@react-three/drei';
 import { useTheme } from '../theme';
 
 const PALETTE = ['#8b5cf6', '#6366f1', '#22d3ee', '#ec4899', '#a855f7', '#38bdf8', '#a78bfa', '#f472b6'];
-const SCREEN_W = 0.95;
-const SCREEN_H = 0.6;
-const MONITOR_XS = [-4, -2.4, -0.8, 0.8, 2.4, 4];
+const SLIDE_DURATION = 4;
+const SLIDE_FADE = 0.9;
 
 function useReducedMotion() {
     return useMemo(() => {
@@ -16,348 +15,389 @@ function useReducedMotion() {
     }, []);
 }
 
-function useScrollOffset() {
-    const ref = useRef(0);
+function smoothstep(a, b, x) {
+    const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+}
+
+/* ---- Texturas pintadas proceduralmente ---- */
+function makeWoodTexture() {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const g = c.getContext('2d');
+    g.fillStyle = '#5b4c3c';
+    g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i <= 10; i++) {
+        g.strokeStyle = 'rgba(28,20,12,0.35)';
+        g.lineWidth = 2;
+        g.beginPath();
+        g.moveTo(i * 25.6, 0);
+        g.lineTo(i * 25.6, 256);
+        g.stroke();
+    }
+    for (let i = 0; i < 90; i++) {
+        g.fillStyle = `rgba(20,12,6,${0.03 + (i % 5) * 0.015})`;
+        g.fillRect((i * 61) % 256, (i * 97) % 256, 4, 42);
+        g.fillStyle = `rgba(255,240,220,${0.015 + (i % 3) * 0.012})`;
+        g.fillRect((i * 131) % 256, (i * 53) % 256, 3, 34);
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(7, 1);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+}
+
+function makeCarpetTexture() {
+    const c = document.createElement('canvas');
+    c.width = c.height = 256;
+    const g = c.getContext('2d');
+    const grad = g.createRadialGradient(128, 128, 10, 128, 128, 124);
+    grad.addColorStop(0, '#3d4a78');
+    grad.addColorStop(0.6, '#2c3558');
+    grad.addColorStop(1, '#232b49');
+    g.fillStyle = grad;
+    g.beginPath();
+    g.arc(128, 128, 124, 0, Math.PI * 2);
+    g.fill();
+    for (let i = 0; i < 26; i++) {
+        g.strokeStyle = `rgba(150,170,230,${0.12})`;
+        g.beginPath();
+        g.arc(128, 128, 18 + i * 4, 0, Math.PI * 2);
+        g.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+}
+
+function makeCityTexture() {
+    const c = document.createElement('canvas');
+    c.width = 256; c.height = 128;
+    const g = c.getContext('2d');
+    g.fillStyle = '#0a0d1f';
+    g.fillRect(0, 0, 256, 128);
+    for (let i = 0; i < 80; i++) {
+        g.fillStyle = i % 9 === 0 ? '#ffd9a0' : 'rgba(180,200,255,0.7)';
+        const x = (i * 31) % 250;
+        const y = (i * 7) % 120;
+        g.fillRect(x, y, 3, 2);
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+}
+
+/* ---- Pantalla que va pasando los proyectos ---- */
+function ProjectSlideshow({ textures, titleKey, t, colors, name }) {
+    const matA = useRef();
+    const matB = useRef();
+    const label = useRef();
+
     useEffect(() => {
-        let raf = 0;
-        const onScroll = () => {
-            cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(() => { ref.current = window.scrollY; });
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
-    }, []);
-    return ref;
-}
-
-function fitImage(texture, planeW, planeH) {
-    const img = texture && texture.image;
-    if (!img || !img.width) return;
-    const sx = planeW / img.width;
-    const sy = planeH / img.height;
-    const scale = Math.max(sx, sy);
-    texture.repeat.set(sx / scale, sy / scale);
-    texture.offset.set((1 - texture.repeat.x) / 2, (1 - texture.repeat.y) / 2);
-    texture.needsUpdate = true;
-}
-
-/* ---- Monitor de proyecto (interactivo) ---- */
-function ProjectMonitor({ texture, x, index, featured, title, t }) {
-    const group = useRef();
-    const [hovered, setHovered] = useState(false);
-    const reduced = useReducedMotion();
-    const color = PALETTE[index % PALETTE.length];
-
-    useEffect(() => { fitImage(texture, SCREEN_W, SCREEN_H); }, [texture]);
+        matA.current.map = textures[0] || null;
+        matB.current.map = textures[1] || null;
+    }, [textures]);
 
     useFrame((state) => {
-        if (reduced) return;
         const time = state.clock.elapsedTime;
-        group.current.scale.setScalar((hovered ? 1.08 : 1) * (1 + Math.sin(time * 1.3 + index) * 0.02));
+        const total = textures.length;
+        if (!total) return;
+        const idx = Math.floor(time / SLIDE_DURATION) % total;
+        const next = (idx + 1) % total;
+        const local = time % SLIDE_DURATION;
+        const fade = smoothstep(SLIDE_DURATION - SLIDE_FADE, SLIDE_DURATION, local);
+        if (matA.current && matB.current) {
+            matA.current.map = textures[idx];
+            matB.current.map = textures[next];
+            matA.current.opacity = 1 - fade;
+            matB.current.opacity = fade;
+        }
+        if (label.current) {
+            label.current.textContent = t(titleKey[idx]);
+            label.current.style.borderColor = `${colors[idx]}88`;
+        }
     });
 
     return (
-        <group position={[x, 0, 0]}>
-            <group ref={group}
-                onPointerOver={() => setHovered(true)}
-                onPointerOut={() => setHovered(false)}
-            >
-                <mesh position={[0, 1.03, -0.18]}>
-                    <boxGeometry args={[0.24, 0.05, 0.2]} />
-                    <meshStandardMaterial color="#5a5f84" roughness={0.5} metalness={0.5} />
-                </mesh>
-                <mesh position={[0, 1.17, -0.16]}>
-                    <boxGeometry args={[0.06, 0.26, 0.045]} />
-                    <meshStandardMaterial color="#4a4f74" roughness={0.4} metalness={0.6} />
-                </mesh>
-                <mesh position={[0, 1.68, -0.05]}>
-                    <boxGeometry args={[SCREEN_W + 0.08, SCREEN_H + 0.08, 0.06]} />
-                    <meshStandardMaterial color="#1a1d33" roughness={0.4} metalness={0.6} />
-                </mesh>
-                <mesh position={[0, 1.68, 0.01]}>
-                    <planeGeometry args={[SCREEN_W, SCREEN_H]} />
-                    <meshBasicMaterial map={texture} />
-                </mesh>
-                <mesh position={[0, 1.68, -0.09]}>
-                    <planeGeometry args={[SCREEN_W + 0.2, SCREEN_H + 0.2]} />
-                    <meshBasicMaterial color={color} transparent opacity={hovered ? 0.55 : 0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
-                </mesh>
-                {featured && (
-                    <Html center position={[0, SCREEN_H / 2 + 0.26, 0]} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
-                        <div className="whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold text-white"
-                            style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', border: '1px solid rgba(139,92,246,0.5)' }}>
-                            {t('projects.featured_tag')}
-                        </div>
-                    </Html>
-                )}
-                <Html center position={[0, -0.32, 0]} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
-                    <div
-                        onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                        className={`whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur-md transition-opacity duration-300 ${hovered ? 'opacity-100' : 'opacity-0'}`}
-                        style={{ pointerEvents: 'auto', background: 'rgba(20,22,45,0.8)', color: '#fff', border: `1px solid ${color}88`, cursor: 'pointer' }}
-                    >
-                        {t(title)}
-                    </div>
-                </Html>
+        <group>
+            <mesh>
+                <planeGeometry args={[1.7, 1.05]} />
+                <meshBasicMaterial ref={matA} transparent toneMapped={false} />
+            </mesh>
+            <mesh position={[0, 0, 0.002]}>
+                <planeGeometry args={[1.7, 1.05]} />
+                <meshBasicMaterial ref={matB} transparent toneMapped={false} opacity={0} />
+            </mesh>
+            <Html center position={[0, -0.85, 0]} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
+                <div ref={label}
+                    className="whitespace-nowrap rounded-full px-3 py-1 text-[11px] font-semibold tracking-wide backdrop-blur-md"
+                    style={{ background: 'rgba(12,14,30,0.72)', color: '#fff', border: '1px solid #8b5cf688' }}
+                >
+                    {name}
+                </div>
+            </Html>
+        </group>
+    );
+}
+
+/* ---- Monitor con la presentación ---- */
+function BigMonitor({ position, ...slides }) {
+    return (
+        <group position={position}>
+            <mesh position={[0, 0, 0]}>
+                <cylinderGeometry args={[0.17, 0.21, 0.06, 18]} />
+                <meshStandardMaterial color="#14151f" roughness={0.5} metalness={0.5} />
+            </mesh>
+            <mesh position={[0, 0.28, 0]}>
+                <cylinderGeometry args={[0.035, 0.05, 0.56, 12]} />
+                <meshStandardMaterial color="#1d1e2c" roughness={0.4} metalness={0.6} />
+            </mesh>
+            <RoundedBox args={[1.92, 1.24, 0.09]} radius={0.05} smoothness={3} position={[0, 0.62, 0]}>
+                <meshStandardMaterial color="#0b0c14" roughness={0.35} metalness={0.7} />
+            </RoundedBox>
+            <group position={[0, 0.62, 0.05]}>
+                <ProjectSlideshow {...slides} />
             </group>
         </group>
     );
 }
 
-/* ---- Monitor genérico de las mesas laterales ---- */
-function SideMonitor({ rotationY, dark, position }) {
-    return (
-        <group position={position} rotation={[0, rotationY, 0]}>
-            <mesh position={[0, 0.32, -0.16]}>
-                <boxGeometry args={[0.2, 0.05, 0.16]} />
-                <meshStandardMaterial color="#3a3f5e" roughness={0.5} metalness={0.5} />
-            </mesh>
-            <mesh position={[0, 0.44, -0.15]}>
-                <boxGeometry args={[0.05, 0.22, 0.04]} />
-                <meshStandardMaterial color="#4a4f74" roughness={0.4} metalness={0.6} />
-            </mesh>
-            <mesh position={[0, 0.72, 0]}>
-                <boxGeometry args={[0.66, 0.42, 0.05]} />
-                <meshStandardMaterial color="#1a1d33" roughness={0.4} metalness={0.6} />
-            </mesh>
-            <mesh position={[0, 0.72, 0.02]}>
-                <planeGeometry args={[0.6, 0.36]} />
-                <meshBasicMaterial color={dark ? '#9fb0ff' : '#c7d2fe'} transparent opacity={0.85} />
-            </mesh>
-        </group>
-    );
-}
-
-/* ---- Persona sentada low-poly ---- */
-function SeatedPerson({ position, rotationY, shirt, skin, dark }) {
+/* ---- Persona de noche (silueta orgánica) ---- */
+function NightCoder({ dark }) {
     const body = useRef();
+    const armL = useRef();
+    const armR = useRef();
     const reduced = useReducedMotion();
 
     useFrame((state) => {
         if (reduced) return;
         const t = state.clock.elapsedTime;
-        body.current.rotation.z = Math.sin(t * 0.8) * 0.02;
-        body.current.position.y = 0 + Math.sin(t * 0.7) * 0.006;
+        body.current.position.y = Math.sin(t * 0.6) * 0.008;
+        const tip = Math.sin(t * 7) * 0.05 + 0.06;
+        armL.current.rotation.x = 0.9 + tip;
+        armR.current.rotation.x = 0.9 - tip;
     });
 
+    const cloth = dark ? '#23263f' : '#2c3450';
+    const skin = '#d0a37b';
+
     return (
-        <group position={position} rotation={[0, rotationY, 0]}>
+        <group position={[0, 0, 0.28]} rotation={[0, Math.PI, 0]}>
             {/* Silla */}
-            <mesh position={[0, 0.04, 0]}>
-                <cylinderGeometry args={[0.2, 0.24, 0.07, 12]} />
-                <meshStandardMaterial color="#2a2f52" roughness={0.7} />
+            <mesh position={[0, 0.28, 0]}>
+                <cylinderGeometry args={[0.22, 0.28, 0.08, 18]} />
+                <meshStandardMaterial color="#15161f" roughness={0.7} />
             </mesh>
-            <mesh position={[0, 0.3, 0]}>
-                <cylinderGeometry args={[0.03, 0.04, 0.42, 8]} />
-                <meshStandardMaterial color="#3a3f5e" roughness={0.5} metalness={0.5} />
+            <mesh position={[0, 0.6, 0]}>
+                <cylinderGeometry args={[0.035, 0.04, 0.42, 12]} />
+                <meshStandardMaterial color="#26273a" roughness={0.5} metalness={0.5} />
             </mesh>
-            <mesh position={[0, 0.58, -0.02]}>
-                <boxGeometry args={[0.42, 0.09, 0.44]} />
-                <meshStandardMaterial color="#4a4f74" roughness={0.8} />
-            </mesh>
-            <mesh position={[0, 0.92, -0.28]}>
-                <boxGeometry args={[0.42, 0.5, 0.08]} />
-                <meshStandardMaterial color="#4a4f74" roughness={0.8} />
-            </mesh>
+            <RoundedBox args={[0.46, 0.1, 0.46]} radius={0.04} smoothness={3} position={[0, 0.8, 0]}>
+                <meshStandardMaterial color={dark ? '#1b1d30' : '#3a4060'} roughness={0.85} />
+            </RoundedBox>
+            <RoundedBox args={[0.44, 0.62, 0.1]} radius={0.045} smoothness={3} position={[0, 1.32, -0.28]} rotation={[-0.15, 0, 0]}>
+                <meshStandardMaterial color={dark ? '#1b1d30' : '#3a4060'} roughness={0.85} />
+            </RoundedBox>
 
             {/* Cuerpo */}
             <group ref={body}>
-                <mesh position={[0, 1.02, -0.12]}>
-                    <boxGeometry args={[0.34, 0.42, 0.22]} />
-                    <meshStandardMaterial color={shirt} roughness={0.85} />
+                <mesh position={[0, 1.25, 0.02]}>
+                    <capsuleGeometry args={[0.17, 0.5, 4, 12]} />
+                    <meshStandardMaterial color={cloth} roughness={0.8} />
                 </mesh>
-                <mesh position={[0, 1.42, -0.1]}>
-                    <boxGeometry args={[0.18, 0.2, 0.18]} />
+                <mesh position={[0, 1.82, 0.02]}>
+                    <sphereGeometry args={[0.14, 20, 20]} />
                     <meshStandardMaterial color={skin} roughness={0.7} />
                 </mesh>
-                {/* Brazos apoyados en la mesa */}
-                <mesh position={[0.2, 1.14, 0.32]} rotation={[-1.1, 0, 0]}>
-                    <boxGeometry args={[0.08, 0.34, 0.1]} />
-                    <meshStandardMaterial color={shirt} roughness={0.85} />
+                {/* Brazo izquierdo (tecleando) */}
+                <mesh ref={armL} position={[-0.24, 1.42, 0.02]} rotation={[0.9, 0, 0.2]}>
+                    <capsuleGeometry args={[0.055, 0.4, 4, 10]} />
+                    <meshStandardMaterial color={cloth} roughness={0.8} />
                 </mesh>
-                <mesh position={[-0.2, 1.14, 0.32]} rotation={[-1.1, 0, 0]}>
-                    <boxGeometry args={[0.08, 0.34, 0.1]} />
-                    <meshStandardMaterial color={shirt} roughness={0.85} />
+                {/* Brazo derecho (tecleando) */}
+                <mesh ref={armR} position={[0.24, 1.42, 0.02]} rotation={[0.9, 0, -0.2]}>
+                    <capsuleGeometry args={[0.055, 0.4, 4, 10]} />
+                    <meshStandardMaterial color={cloth} roughness={0.8} />
                 </mesh>
                 {/* Piernas */}
-                <mesh position={[0.09, 0.62, -0.02]}>
-                    <boxGeometry args={[0.1, 0.42, 0.14]} />
-                    <meshStandardMaterial color={dark ? '#1a1d33' : '#2c3450'} roughness={0.8} />
+                <mesh position={[0.11, 0.72, 0.02]}>
+                    <capsuleGeometry args={[0.07, 0.42, 4, 10]} />
+                    <meshStandardMaterial color={dark ? '#1a1c2e' : '#2c3350'} roughness={0.85} />
                 </mesh>
-                <mesh position={[-0.09, 0.62, -0.02]}>
-                    <boxGeometry args={[0.1, 0.42, 0.14]} />
-                    <meshStandardMaterial color={dark ? '#1a1d33' : '#2c3450'} roughness={0.8} />
+                <mesh position={[-0.11, 0.72, 0.02]}>
+                    <capsuleGeometry args={[0.07, 0.42, 4, 10]} />
+                    <meshStandardMaterial color={dark ? '#1a1c2e' : '#2c3350'} roughness={0.85} />
                 </mesh>
             </group>
         </group>
     );
 }
 
-/* ---- Mesa ---- */
-function Desk({ position, width, depth, dark, lightEdge }) {
-    const desk = dark ? '#3d4368' : '#f7f9ff';
-    const legs = dark ? '#2a2f52' : '#c9d1ea';
+/* ---- Lámpara de escritorio con luz real ---- */
+function DeskLamp({ dark }) {
+    const lightRef = useRef();
     return (
-        <group position={position}>
-            <mesh position={[0, 0.55, 0]}>
-                <boxGeometry args={[width, 0.11, depth]} />
-                <meshStandardMaterial color={desk} roughness={0.45} metalness={0.1} />
+        <group position={[0, 0, 0]}>
+            <RoundedBox args={[0.42, 0.06, 0.3]} radius={0.02} smoothness={2} position={[0, 0.03, 0]}>
+                <meshStandardMaterial color="#1c1d2b" roughness={0.4} metalness={0.5} />
+            </RoundedBox>
+            <mesh position={[0, 0.5, 0]} rotation={[0.15, 0, 0]}>
+                <cylinderGeometry args={[0.018, 0.022, 0.9, 10]} />
+                <meshStandardMaterial color="#33354c" roughness={0.4} metalness={0.6} />
             </mesh>
-            {[-width / 2 + 0.15, width / 2 - 0.15].map((px) => (
-                <group key={px}>
-                    <mesh position={[px, 0.27, depth / 2 - 0.15]}>
-                        <boxGeometry args={[0.12, 0.46, 0.12]} />
-                        <meshStandardMaterial color={legs} roughness={0.6} />
-                    </mesh>
-                    <mesh position={[px, 0.27, -depth / 2 + 0.15]}>
-                        <boxGeometry args={[0.12, 0.46, 0.12]} />
-                        <meshStandardMaterial color={legs} roughness={0.6} />
-                    </mesh>
-                </group>
-            ))}
-            {lightEdge && (
-                <mesh position={[0, 0.62, -depth / 2 - 0.02]}>
-                    <boxGeometry args={[width, 0.02, 0.02]} />
-                    <meshBasicMaterial color="#22d3ee" transparent opacity={0.85} blending={THREE.AdditiveBlending} />
-                </mesh>
-            )}
-            {/* Teclado */}
-            <mesh position={[0, 0.62, depth / 4]} rotation={[-0.05, 0, 0]}>
-                <boxGeometry args={[width * 0.22, 0.03, 0.36]} />
-                <meshStandardMaterial color={dark ? '#232746' : '#dfe6fb'} roughness={0.8} />
+            <mesh position={[0, 0.98, 0.18]} rotation={[-0.7, 0, 0]}>
+                <cylinderGeometry args={[0.018, 0.018, 0.5, 10]} />
+                <meshStandardMaterial color="#33354c" roughness={0.4} metalness={0.6} />
             </mesh>
+            <mesh position={[0, 1.18, 0.62]} rotation={[-1, 0, 0]}>
+                <coneGeometry args={[0.18, 0.24, 20, 1, true]} />
+                <meshStandardMaterial color="#2a2b40" roughness={0.4} metalness={0.6} side={THREE.DoubleSide} />
+            </mesh>
+            <mesh position={[0, 1.1, 0.72]}>
+                <sphereGeometry args={[0.09, 14, 14]} />
+                <meshStandardMaterial emissive="#ffd9a0" emissiveIntensity={3} color="#1a160a" />
+            </mesh>
+            <pointLight ref={lightRef} position={[0, 1.05, 0.85]} intensity={dark ? 7 : 3} distance={7} decay={2} color="#ffc98a" castShadow />
         </group>
     );
 }
 
-/* ---- Planta ---- */
+/* ---- Planta algo más rica ---- */
 function Plant({ position, scale = 1 }) {
+    const leaves = useMemo(() => {
+        const arr = [];
+        const count = 7;
+        for (let i = 0; i < count; i++) {
+            const a = (i / count) * Math.PI * 2 + i * 0.3;
+            arr.push({
+                pos: [Math.sin(a) * 0.28 * (0.6 + (i % 3) * 0.2), 0.55 + (i % 4) * 0.14, Math.cos(a) * 0.28 * (0.6 + (i % 3) * 0.2)],
+                rotY: a,
+                h: 0.5 + (i % 3) * 0.2,
+            });
+        }
+        return arr;
+    }, []);
     return (
         <group position={position} scale={[scale, scale, scale]}>
-            <mesh position={[0, 0.12, 0]}>
-                <cylinderGeometry args={[0.14, 0.18, 0.26, 12]} />
-                <meshStandardMaterial color="#b3475a" roughness={0.6} />
+            <mesh position={[0, 0.18, 0]}>
+                <cylinderGeometry args={[0.15, 0.2, 0.34, 16]} />
+                <meshStandardMaterial color="#283b4f" roughness={0.6} />
             </mesh>
-            {[
-                [0, 0.6, 0, 0, 0.55, 0],
-                [-0.16, 0.72, 0.05, -0.3, 0.6, 0.3],
-                [0.16, 0.66, -0.05, 0.3, 0.6, -0.3],
-            ].map((p, i) => (
-                <mesh key={i} position={[p[0], p[1], p[2]]} rotation={[p[3], 0, p[4]]}>
-                    <boxGeometry args={[0.1, p[5], 0.02]} />
-                    <meshStandardMaterial color="#4ade80" roughness={0.7} />
+            {leaves.map((leaf, i) => (
+                <mesh key={i} position={leaf.pos} rotation={[0.2, leaf.rotY, 0.5]}>
+                    <planeGeometry args={[0.14, leaf.h, 1, 3]} />
+                    <meshStandardMaterial color={i % 2 ? '#3fae5a' : '#2f8f4a'} roughness={0.8} side={THREE.DoubleSide} />
                 </mesh>
             ))}
         </group>
     );
 }
 
-/* ---- Estantería con libros ---- */
-function Shelf({ dark }) {
-    const cols = [0.3, 0.4, 0.24, 0.34, 0.28];
-    const bookColors = ['#8b5cf6', '#22d3ee', '#ec4899', '#f59e0b', '#34d399', '#6366f1', '#a855f7', '#38bdf8'];
-    return (
-        <group position={[-4.2, 0, -3.5]}>
-            {[1.5, 1.9, 2.3].map((y) => (
-                <group key={y}>
-                    <mesh position={[0, y, 0]}>
-                        <boxGeometry args={[2.1, 0.05, 0.24]} />
-                        <meshStandardMaterial color={dark ? '#3a3f5e' : '#cfd6ec'} roughness={0.6} />
-                    </mesh>
-                    {cols.map((w, i) => (
-                        <mesh key={i} position={[-0.95 + w / 2 + i * 0.42, y + 0.12, 0]}>
-                            <boxGeometry args={[w, 0.2, 0.18]} />
-                            <meshStandardMaterial color={bookColors[(i + Math.floor(y)) % bookColors.length]} roughness={0.8} />
-                        </mesh>
-                    ))}
-                </group>
-            ))}
-            <mesh position={[0, 2.6, 0]}>
-                <boxGeometry args={[2.1, 0.05, 0.24]} />
-                <meshStandardMaterial color={dark ? '#3a3f5e' : '#cfd6ec'} roughness={0.6} />
-            </mesh>
-        </group>
-    );
-}
-
-/* ---- Habitación ---- */
-function Room({ dark }) {
-    const wall = dark ? '#272b4d' : '#eef1f9';
-    const wallDark = dark ? '#202440' : '#dfe4f4';
-    const floor = dark ? '#1c2038' : '#e6eaf6';
+/* ---- Habitación nocturna ---- */
+function NightRoom({ dark }) {
+    const wood = useMemo(() => makeWoodTexture(), []);
+    const carpet = useMemo(() => makeCarpetTexture(), []);
+    const city = useMemo(() => makeCityTexture(), []);
+    const wall = dark ? '#181a2c' : '#33375a';
+    const bg = dark ? '#0b0e1e' : '#232846';
 
     return (
         <group>
-            {/* Suelo */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-                <planeGeometry args={[14, 9]} />
-                <meshStandardMaterial color={floor} roughness={0.85} />
+            {/* Suelo de madera */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, -0.5]} receiveShadow>
+                <planeGeometry args={[10, 8]} />
+                <meshStandardMaterial map={wood} roughness={0.55} metalness={0.05} />
             </mesh>
-            {/* Alfombra central */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.005, -0.4]}>
-                <circleGeometry args={[3.4, 32]} />
-                <meshStandardMaterial color={dark ? '#3a3f5e' : '#d3dbf3'} roughness={1} />
-            </mesh>
-            {/* Techo */}
-            <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 4, 0]}>
-                <planeGeometry args={[14, 9]} />
-                <meshStandardMaterial color={dark ? '#1c2038' : '#dfe4f4'} roughness={0.95} />
+            {/* Alfombra */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -0.4]} receiveShadow>
+                <circleGeometry args={[2.6, 40]} />
+                <meshStandardMaterial map={carpet} roughness={0.95} />
             </mesh>
             {/* Pared trasera */}
-            <mesh position={[0, 2, -3.6]}>
-                <planeGeometry args={[14, 4]} />
-                <meshStandardMaterial color={wall} roughness={0.92} />
+            <mesh position={[0, 1.9, -3.3]} receiveShadow>
+                <planeGeometry args={[10, 3.8]} />
+                <meshStandardMaterial color={wall} roughness={0.9} />
             </mesh>
-            {/* Pared izquierda */}
-            <mesh position={[-6.6, 2, -0.3]} rotation={[0, Math.PI / 2, 0]}>
-                <planeGeometry args={[6.6, 4]} />
-                <meshStandardMaterial color={wallDark} roughness={0.92} />
+            {/* Paredes laterales */}
+            <mesh position={[-5, 1.9, -0.4]} rotation={[0, Math.PI / 2, 0]} receiveShadow>
+                <planeGeometry args={[5.8, 3.8]} />
+                <meshStandardMaterial color={dark ? '#151729' : '#2c3150'} roughness={0.9} />
             </mesh>
-            {/* Pared derecha */}
-            <mesh position={[6.6, 2, -0.3]} rotation={[0, -Math.PI / 2, 0]}>
-                <planeGeometry args={[6.6, 4]} />
-                <meshStandardMaterial color={wallDark} roughness={0.92} />
+            <mesh position={[5, 1.9, -0.4]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
+                <planeGeometry args={[5.8, 3.8]} />
+                <meshStandardMaterial color={dark ? '#151729' : '#2c3150'} roughness={0.9} />
+            </mesh>
+            {/* Rodapié */}
+            <mesh position={[0, 0.06, -3.26]}>
+                <boxGeometry args={[10, 0.12, 0.05]} />
+                <meshStandardMaterial color={dark ? '#0d0f1c' : '#1e2238'} roughness={0.7} />
             </mesh>
 
-            {/* Ventana con resplandor */}
-            <group position={[3.6, 2.1, -3.55]}>
-                <mesh>
-                    <planeGeometry args={[3, 2.2]} />
-                    <meshBasicMaterial color={dark ? '#8fa0e8' : '#bcd0ff'} transparent opacity={0.9} />
+            {/* Ventana de noche con ciudad */}
+            <group position={[2.6, 2.1, -3.26]}>
+                <RoundedBox args={[2.6, 1.8, 0.08]} radius={0.03} smoothness={2}>
+                    <meshStandardMaterial color={dark ? '#14151f' : '#2a2d45'} roughness={0.5} />
+                </RoundedBox>
+                <mesh position={[0, 0, 0.05]}>
+                    <planeGeometry args={[2.2, 1.4]} />
+                    <meshBasicMaterial map={city} toneMapped={false} />
                 </mesh>
-                <mesh position={[0, -1.15, 0.02]}>
-                    <boxGeometry args={[2.6, 0.05, 0.05]} />
-                    <meshBasicMaterial color="#22d3ee" transparent opacity={0.9} />
+                <mesh position={[0, 0, 0.06]}>
+                    <planeGeometry args={[2.2, 1.4]} />
+                    <meshStandardMaterial color={bg} transparent opacity={0.15} roughness={1} />
                 </mesh>
             </group>
 
-            {/* Luces de techo cálidas */}
-            <group>
-                <mesh position={[-3.2, 3.94, -0.6]} rotation={[Math.PI / 2, 0, 0]}>
-                    <planeGeometry args={[1.6, 2.4]} />
-                    <meshBasicMaterial color="#fff7ed" transparent opacity={dark ? 0.4 : 0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
-                </mesh>
-                <mesh position={[3.2, 3.94, -0.6]} rotation={[Math.PI / 2, 0, 0]}>
-                    <planeGeometry args={[1.6, 2.4]} />
-                    <meshBasicMaterial color="#fff7ed" transparent opacity={dark ? 0.4 : 0.6} blending={THREE.AdditiveBlending} depthWrite={false} />
-                </mesh>
-                <mesh position={[0, 3.94, -0.8]} rotation={[Math.PI / 2, 0, 0]}>
-                    <planeGeometry args={[2.2, 4]} />
-                    <meshBasicMaterial color="#eef2ff" transparent opacity={dark ? 0.45 : 0.55} blending={THREE.AdditiveBlending} depthWrite={false} />
-                </mesh>
-            </group>
+            {/* Cuadros en la pared */}
+            <mesh position={[-3.2, 2.4, -3.26]}>
+                <boxGeometry args={[0.7, 0.5, 0.05]} />
+                <meshStandardMaterial color={dark ? '#23253b' : '#3a405f'} roughness={0.6} />
+            </mesh>
+            <mesh position={[-3.2, 2.4, -3.23]}>
+                <planeGeometry args={[0.5, 0.3]} />
+                <meshBasicMaterial color="#8b5cf6" transparent opacity={0.8} />
+            </mesh>
 
-            {/* Faldón de luz tras mesa central */}
-            <mesh position={[0, 1.6, -3.4]}>
-                <planeGeometry args={[11, 1.6]} />
-                <meshBasicMaterial color={dark ? '#8b5cf6' : '#c7d2fe'} transparent opacity={dark ? 0.22 : 0.5} blending={THREE.AdditiveBlending} depthWrite={false} />
+            {/* Luz fría de la ventana */}
+            <pointLight position={[2.6, 2.4, -2.6]} intensity={dark ? 2.2 : 1.2} distance={6} color="#aab6ff" />
+        </group>
+    );
+}
+
+/* ---- Escritorio de madera ---- */
+function NightDesk({ dark }) {
+    const wood = useMemo(() => makeWoodTexture(), []);
+    return (
+        <group position={[0, 0, -0.4]}>
+            <RoundedBox args={[3.6, 0.1, 1.05]} radius={0.03} smoothness={3} position={[0, 0.62, 0]} receiveShadow castShadow>
+                <meshStandardMaterial map={wood} roughness={0.45} metalness={0.05} />
+            </RoundedBox>
+            {[-1.5, 1.5].map((px) => (
+                <group key={px}>
+                    <RoundedBox args={[0.09, 0.6, 0.09]} radius={0.02} smoothness={2} position={[px, 0.28, -0.3]} castShadow>
+                        <meshStandardMaterial color={dark ? '#191a28' : '#33375a'} roughness={0.6} />
+                    </RoundedBox>
+                    <RoundedBox args={[0.09, 0.6, 0.09]} radius={0.02} smoothness={2} position={[px, 0.28, 0.3]} castShadow>
+                        <meshStandardMaterial color={dark ? '#191a28' : '#33375a'} roughness={0.6} />
+                    </RoundedBox>
+                </group>
+            ))}
+            {/* Teclado */}
+            <RoundedBox args={[0.9, 0.035, 0.26]} radius={0.015} smoothness={2} position={[0, 0.68, 0.32]} rotation={[-0.06, 0, 0]} castShadow>
+                <meshStandardMaterial color={dark ? '#0d0f1c' : '#22263c'} roughness={0.7} />
+            </RoundedBox>
+            {/* Taza */}
+            <mesh position={[1.15, 0.68, 0.28]}>
+                <cylinderGeometry args={[0.06, 0.05, 0.12, 16]} />
+                <meshStandardMaterial color={dark ? '#0f111f' : '#2a2d45'} roughness={0.4} metalness={0.4} />
             </mesh>
         </group>
     );
 }
 
-/* ---- Escena de oficina ---- */
-function OfficeScene({ projects, t, dark }) {
+/* ---- Escena completa ---- */
+function NightOffice({ projects, t, dark }) {
     const textures = useTexture(projects.map((p) => '/' + p.image));
     useEffect(() => {
         textures.forEach((tex) => {
@@ -366,40 +406,27 @@ function OfficeScene({ projects, t, dark }) {
         });
     }, [textures]);
 
+    const titleKey = projects.map((p) => p.title);
+    const name = t('hero.role1');
+
     return (
         <group>
-            <Room dark={dark} />
-            <Shelf dark={dark} />
-
-            {/* Mesa central con los proyectos */}
-            <Desk position={[0, 0, -1.3]} width={10.4} depth={1.9} dark={dark} lightEdge />
-            <group position={[0, -0.455, 0]}>
-                {projects.map((project, index) => (
-                    <ProjectMonitor
-                        key={index}
-                        texture={textures[index]}
-                        x={MONITOR_XS[index % MONITOR_XS.length]}
-                        index={index}
-                        featured={!!project.featured}
-                        title={project.title}
-                        t={t}
-                    />
-                ))}
+            <NightRoom dark={dark} />
+            <NightDesk dark={dark} />
+            <BigMonitor
+                position={[0, 0.68, -0.35]}
+                textures={textures}
+                titleKey={titleKey}
+                t={t}
+                colors={PALETTE}
+                name={name}
+            />
+            <group position={[1.05, 0.68, -0.2]}>
+                <DeskLamp dark={dark} />
             </group>
-
-            {/* Mesa izquierda con persona */}
-            <Desk position={[-4.7, 0, -0.4]} width={1.9} depth={1} dark={dark} />
-            <SideMonitor rotationY={Math.PI / 2} dark={dark} position={[-4.7, 0.27, -0.5]} />
-            <SeatedPerson position={[-5.6, 0, -0.4]} rotationY={Math.PI / 2} shirt="#6366f1" skin="#f2c194" dark={dark} />
-
-            {/* Mesa derecha con persona */}
-            <Desk position={[4.7, 0, -0.4]} width={1.9} depth={1} dark={dark} />
-            <SideMonitor rotationY={-Math.PI / 2} dark={dark} position={[4.7, 0.27, -0.5]} />
-            <SeatedPerson position={[5.6, 0, -0.4]} rotationY={-Math.PI / 2} shirt="#22d3ee" skin="#d9a06b" dark={dark} />
-
-            {/* Plantas y extras */}
-            <Plant position={[-6.1, 0, -2.9]} scale={1.15} />
-            <Plant position={[6.1, 0, -2.7]} scale={0.9} />
+            <NightCoder dark={dark} />
+            <Plant position={[-4.4, 0, -1.6]} scale={1.1} />
+            <Plant position={[4.5, 0, -1.4]} scale={0.85} />
         </group>
     );
 }
@@ -407,33 +434,45 @@ function OfficeScene({ projects, t, dark }) {
 const Experience3D = ({ projects, t }) => {
     const { theme } = useTheme();
     const dark = theme === 'dark';
+    const bg = dark ? '#0b0e1e' : '#232846';
 
     return (
         <Canvas
-            flat
+            shadows
             dpr={[1, 1.5]}
-            gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-            camera={{ position: [0, 3, 8.5], fov: 55 }}
+            gl={{ antialias: true, alpha: false, powerPreference: 'high-performance', shadowMap: { enabled: true, type: THREE.PCFSoftShadowMap } }}
+            camera={{ position: [1.6, 2.1, 3.6], fov: 45 }}
             style={{ position: 'absolute', inset: 0 }}
         >
-            <color attach="background" args={[dark ? '#191c36' : '#dde3f3']} />
-            <ambientLight intensity={dark ? 1.5 : 1.7} />
-            <directionalLight position={[3, 6, 5]} intensity={dark ? 1.2 : 1.4} />
-            <pointLight position={[0, 3.5, -1]} intensity={dark ? 0.9 : 0.6} color="#c7d2fe" />
-            <pointLight position={[-4, 2, 2]} intensity={0.5} color="#22d3ee" />
-            <OfficeScene projects={projects} t={t} dark={dark} />
+            <color attach="background" args={[bg]} />
+            <fog attach="fog" args={[bg, 8, 15]} />
+            <ambientLight intensity={dark ? 0.45 : 0.5} color="#6b76ba" />
+            <directionalLight
+                position={[-3, 5, 4]}
+                intensity={dark ? 0.35 : 0.5}
+                color="#bcc4ff"
+                castShadow
+                shadow-mapSize={[1024, 1024]}
+                shadow-camera-left={-6}
+                shadow-camera-right={6}
+                shadow-camera-top={6}
+                shadow-camera-bottom={-6}
+            />
+            {dark && <pointLight position={[0, 2.6, 1.5]} intensity={2} distance={9} color="#8b9cff" />}
+            <SoftShadows size={14} samples={8} focus={0.4} />
+            <NightOffice projects={projects} t={t} dark={dark} />
             <OrbitControls
                 enableZoom={false}
                 enablePan={false}
                 autoRotate
-                autoRotateSpeed={0.4}
+                autoRotateSpeed={0.35}
                 enableDamping
                 dampingFactor={0.06}
-                target={[0, 1.5, -0.6]}
-                minDistance={5}
-                maxDistance={13}
-                minPolarAngle={0.7}
-                maxPolarAngle={1.4}
+                target={[0, 1.15, -0.2]}
+                minDistance={3.5}
+                maxDistance={11}
+                minPolarAngle={0.9}
+                maxPolarAngle={1.5}
             />
         </Canvas>
     );

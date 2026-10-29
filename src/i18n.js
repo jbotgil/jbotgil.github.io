@@ -15,7 +15,7 @@ const resources = {
             "hero.role1": "Desarrollador de Software",
             "hero.role2": "Especialista en IA y Big Data",
             "hero.description": "Construyendo soluciones eficientes y explorando el mundo de los datos.",
-            "hero.hint": "Arrastra para mover la cámara · Pasa el cursor por un monitor",
+            "hero.hint": "Noche de código · Tus proyectos se van mostrando en pantalla",
             "hero.downloadCV": "Descargar CV",
             "hero.contactMe": "Contáctame",
 
@@ -154,7 +154,7 @@ const resources = {
             "hero.role1": "Software Developer",
             "hero.role2": "AI & Big Data Specialist",
             "hero.description": "Building efficient solutions and exploring the world of data.",
-            "hero.hint": "Drag to move the camera · Hover a monitor",
+            "hero.hint": "Coding at night · Your projects play on screen",
             "hero.downloadCV": "Download CV",
             "hero.contactMe": "Contact Me",
 

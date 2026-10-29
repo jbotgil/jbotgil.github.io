@@ -66,6 +66,8 @@ const Hero = ({ data }) => {
                 ) : (
                     <AuroraFallback />
                 )}
+                {/* Viñeta cinematográfica */}
+                <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 45%, transparent 55%, rgba(5,7,18,0.55) 100%)' }} />
             </div>
 
             {/* Transición suave a la siguiente sección */}
