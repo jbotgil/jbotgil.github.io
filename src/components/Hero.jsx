@@ -13,7 +13,7 @@ const Hero = ({ data }) => {
             <div className="pointer-events-none absolute -top-40 -right-40 h-[560px] w-[560px] rounded-full bg-brand-violet/12 blur-[130px]" />
             <div className="pointer-events-none absolute top-1/3 -left-40 h-[420px] w-[420px] rounded-full bg-brand-cyan/8 blur-[120px]" />
 
-            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
                 {/* Texto */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
@@ -21,14 +21,14 @@ const Hero = ({ data }) => {
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <span className="kicker mb-6 inline-block">{t('hero.greeting')}</span>
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
                         {data.name}
                     </h1>
-                    <div className="text-lg md:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
+                    <div className="text-base md:text-lg lg:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
                         <span className="text-brand-violet">&gt;</span>{' '}
                         <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
                     </div>
-                    <p className="max-w-md text-base md:text-lg leading-relaxed text-slate-500 dark:text-slate-400 mb-9">
+                    <p className="max-w-lg text-base md:text-lg leading-relaxed text-slate-500 dark:text-slate-400 mb-9">
                         {t('about.description')}
                     </p>
 
@@ -74,7 +74,7 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                    className="relative mx-auto w-full max-w-[320px] sm:max-w-[380px] text-center"
+                    className="relative mx-auto w-full max-w-[260px] sm:max-w-[320px] md:max-w-[380px] text-center"
                 >
                     <div className="pointer-events-none absolute -inset-10 rounded-full bg-brand-violet/12 blur-3xl" />
 

@@ -5,10 +5,22 @@
 @layer base {
     html {
         scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
     }
 
     body {
         @apply bg-[#f9fafc] text-slate-700 font-sans antialiased dark:bg-[#09090f] dark:text-slate-300 transition-colors duration-300;
+        overflow-x: hidden;
+        word-wrap: break-word;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    pre, code {
+        word-break: break-word;
     }
 
     ::selection {

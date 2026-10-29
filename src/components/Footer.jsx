@@ -21,7 +21,7 @@ const Footer = ({ data }) => {
                     transition={{ duration: 0.5 }}
                     className="mx-auto max-w-3xl text-center"
                 >
-                    <h2 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-6" style={{ letterSpacing: '-0.03em' }}>
+                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-6" style={{ letterSpacing: '-0.03em' }}>
                         {t('contact.title')} <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg,#6d5cf6,#5b5bd6)' }}>{t('contact.subtitle')}</span>
                     </h2>
                     <p className="text-lg text-slate-500 dark:text-slate-400 mb-10">

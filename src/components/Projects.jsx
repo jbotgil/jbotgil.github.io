@@ -31,7 +31,7 @@ const Projects = ({ data }) => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-60px' }}
                     transition={{ duration: 0.5 }}
-                    className="card card-hover overflow-hidden grid md:grid-cols-2 mb-14"
+                    className="card card-hover overflow-hidden grid md:grid-cols-2 mb-10 lg:mb-14"
                 >
                     <div className="relative aspect-[16/10] md:aspect-auto overflow-hidden">
                         <img src={featured.image} alt={t(featured.title)} loading="lazy" className="h-full w-full object-cover" />
@@ -45,7 +45,7 @@ const Projects = ({ data }) => {
                                 </span>
                             ))}
                         </div>
-                        <h3 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
                             {t(featured.title)}
                         </h3>
                         <p className="text-slate-500 dark:text-slate-400 leading-relaxed mb-8 flex-grow">
