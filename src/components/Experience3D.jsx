@@ -194,6 +194,97 @@ function DeskLamp({ dark }) {
     );
 }
 
+/* ---- Teclado mecánico ---- */
+function MechanicalKeyboard({ dark }) {
+    const keyColor = dark ? '#1b1e34' : '#282c48';
+    const capColor = dark ? '#0e1020' : '#3a3f60';
+    const rows = [0, 1, 2, 3];
+    return (
+        <group>
+            <RoundedBox args={[0.82, 0.03, 0.26]} radius={0.012} smoothness={2}>
+                <meshStandardMaterial color={keyColor} roughness={0.6} />
+            </RoundedBox>
+            {rows.map((r) =>
+                Array.from({ length: r === 3 ? 6 : 10 }).map((_, c) => (
+                    <RoundedBox
+                        key={`${r}-${c}`}
+                        args={[c === 9 && r === 3 ? 0.34 : 0.055, 0.03, 0.042]}
+                        radius={0.008}
+                        smoothness={2}
+                        position={[(c - 4.5) * 0.078, 0.035 + r * 0.05, (r - 1.5) * 0.075]}
+                    >
+                        <meshStandardMaterial color={capColor} roughness={0.5} />
+                    </RoundedBox>
+                ))
+            )}
+        </group>
+    );
+}
+
+/* ---- Ratón ---- */
+function Mouse({ dark }) {
+    return (
+        <group>
+            <RoundedBox args={[0.09, 0.035, 0.15]} radius={0.02} smoothness={2}>
+                <meshStandardMaterial color={dark ? '#0e1020' : '#262a45'} roughness={0.4} />
+            </RoundedBox>
+            <mesh position={[0, 0.026, -0.02]}>
+                <cylinderGeometry args={[0.012, 0.012, 0.02, 10]} />
+                <meshStandardMaterial color="#8b5cf6" roughness={0.3} />
+            </mesh>
+        </group>
+    );
+}
+
+/* ---- Monitor secundario inclinado ---- */
+function SideScreen({ dark, position, rotationY }) {
+    return (
+        <group position={position} rotation={[0, rotationY, 0]}>
+            <mesh position={[0, 0.02, 0]}>
+                <cylinderGeometry args={[0.12, 0.15, 0.045, 14]} />
+                <meshStandardMaterial color="#14151f" roughness={0.5} metalness={0.5} />
+            </mesh>
+            <mesh position={[0, 0.17, 0]}>
+                <cylinderGeometry args={[0.025, 0.035, 0.3, 10]} />
+                <meshStandardMaterial color="#1d1e2c" roughness={0.4} metalness={0.6} />
+            </mesh>
+            <RoundedBox args={[0.95, 0.6, 0.07]} radius={0.03} smoothness={2} position={[0, 0.42, 0]}>
+                <meshStandardMaterial color="#0b0c14" roughness={0.35} metalness={0.7} />
+            </RoundedBox>
+            <mesh position={[0, 0.42, 0.04]}>
+                <planeGeometry args={[0.85, 0.5]} />
+                <meshBasicMaterial color={dark ? '#9fb0ff' : '#c7d2fe'} transparent opacity={0.85} />
+            </mesh>
+        </group>
+    );
+}
+
+/* ---- Soporte con cascos ---- */
+function HeadsetStand({ dark }) {
+    return (
+        <group>
+            <mesh position={[0, 0.015, 0]}>
+                <cylinderGeometry args={[0.09, 0.12, 0.03, 14]} />
+                <meshStandardMaterial color="#14151f" roughness={0.6} />
+            </mesh>
+            <mesh position={[0, 0.28, 0]}>
+                <cylinderGeometry args={[0.015, 0.02, 0.44, 10]} />
+                <meshStandardMaterial color="#26273a" roughness={0.4} metalness={0.6} />
+            </mesh>
+            <mesh position={[0, 0.5, 0]}>
+                <cylinderGeometry args={[0.015, 0.015, 0.3, 10]} rotation={[Math.PI / 2, 0, 0]} />
+                <meshStandardMaterial color="#26273a" roughness={0.4} metalness={0.6} />
+            </mesh>
+            {[-0.16, 0.16].map((x) => (
+                <mesh key={x} position={[x, 0.55, 0]} rotation={[0, 0, Math.PI / 2]}>
+                    <cylinderGeometry args={[0.055, 0.055, 0.09, 12]} />
+                    <meshStandardMaterial color={dark ? '#0a0b14' : '#1e2238'} roughness={0.7} />
+                </mesh>
+            ))}
+        </group>
+    );
+}
+
 /* ---- Planta algo más rica ---- */
 function Plant({ position, scale = 1 }) {
     const leaves = useMemo(() => {
@@ -296,15 +387,15 @@ function NightRoom({ dark }) {
     );
 }
 
-/* ---- Escritorio de madera ---- */
+/* ---- Escritorio de madera (setup de programador) ---- */
 function NightDesk({ dark }) {
     const wood = useMemo(() => makeWoodTexture(), []);
     return (
         <group position={[0, 0, -0.4]}>
-            <RoundedBox args={[3.6, 0.1, 1.05]} radius={0.03} smoothness={3} position={[0, 0.62, 0]} receiveShadow castShadow>
+            <RoundedBox args={[4.6, 0.1, 1.05]} radius={0.03} smoothness={3} position={[0, 0.62, 0]} receiveShadow castShadow>
                 <meshStandardMaterial map={wood} roughness={0.45} metalness={0.05} />
             </RoundedBox>
-            {[-1.5, 1.5].map((px) => (
+            {[-2.2, 2.2].map((px) => (
                 <group key={px}>
                     <RoundedBox args={[0.09, 0.6, 0.09]} radius={0.02} smoothness={2} position={[px, 0.28, -0.3]} castShadow>
                         <meshStandardMaterial color={dark ? '#191a28' : '#33375a'} roughness={0.6} />
@@ -314,14 +405,22 @@ function NightDesk({ dark }) {
                     </RoundedBox>
                 </group>
             ))}
-            {/* Teclado */}
-            <RoundedBox args={[0.9, 0.035, 0.26]} radius={0.015} smoothness={2} position={[0, 0.68, 0.32]} rotation={[-0.06, 0, 0]} castShadow>
-                <meshStandardMaterial color={dark ? '#0d0f1c' : '#22263c'} roughness={0.7} />
+            {/* Alfombrilla */}
+            <RoundedBox args={[1.9, 0.012, 0.6]} radius={0.02} smoothness={2} position={[0, 0.675, 0.24]}>
+                <meshStandardMaterial color={dark ? '#0a0b14' : '#14172a'} roughness={0.9} />
             </RoundedBox>
+            {/* Teclado mecánico */}
+            <group position={[0, 0.69, 0.2]}>
+                <MechanicalKeyboard dark={dark} />
+            </group>
+            {/* Ratón */}
+            <group position={[0.58, 0.69, 0.34]}>
+                <Mouse dark={dark} />
+            </group>
             {/* Taza */}
-            <mesh position={[1.15, 0.68, 0.28]}>
+            <mesh position={[0.95, 0.68, 0.42]}>
                 <cylinderGeometry args={[0.06, 0.05, 0.12, 16]} />
-                <meshStandardMaterial color={dark ? '#0f111f' : '#2a2d45'} roughness={0.4} metalness={0.4} />
+                <meshStandardMaterial color={dark ? '#0f111f' : '#22263c'} roughness={0.4} metalness={0.4} />
             </mesh>
         </group>
     );
@@ -352,8 +451,15 @@ function NightOffice({ projects, t, dark }) {
                 colors={PALETTE}
                 name={name}
             />
-            <group position={[1.05, 0.68, -0.2]}>
+            {/* Lámpara al fondo, a la izquierda */}
+            <group position={[-1.45, 0.68, -0.55]} rotation={[0, 0.25, 0]}>
                 <DeskLamp dark={dark} />
+            </group>
+            {/* Monitor secundario inclinado a la derecha */}
+            <SideScreen dark={dark} position={[1.35, 0.68, -0.2]} rotationY={-0.6} />
+            {/* Soporte con cascos */}
+            <group position={[-1.7, 0.68, 0.2]}>
+                <HeadsetStand dark={dark} />
             </group>
             <Plant position={[-4.4, 0, -1.6]} scale={1.1} />
             <Plant position={[4.5, 0, -1.4]} scale={0.85} />
