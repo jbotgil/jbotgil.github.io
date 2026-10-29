@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Mail, Send, MousePointer2 } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from './Typewriter';
 
@@ -75,26 +75,12 @@ const Hero = ({ data }) => {
 
             {/* Overlay de contenido (no bloquea la interacción 3D salvo botones) */}
             <div className="relative flex-1 px-6 pointer-events-none">
-                {/* Pista de interacción */}
+                {/* Contenido principal arriba-izquierda */}
                 <motion.div
-                    initial={{ opacity: 0, y: -12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1, duration: 0.6 }}
-                    className="pointer-events-none flex justify-center pt-20 md:pt-24"
-                >
-                    <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-slate-200 backdrop-blur-md"
-                        style={{ background: 'rgba(15,10,40,0.5)', border: '1px solid rgba(139,92,246,0.35)' }}>
-                        <MousePointer2 size={13} className="text-brand-violet" />
-                        {t('hero.hint')}
-                    </span>
-                </motion.div>
-
-                {/* Contenido principal abajo-izquierda */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: -24 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="relative z-10 flex min-h-screen flex-col justify-end pb-20 md:pb-16 mr-auto max-w-lg"
+                    className="relative z-10 flex min-h-screen flex-col justify-start pt-32 md:pt-40 mr-auto max-w-lg"
                 >
                     <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3 drop-shadow">
                         {t('hero.greeting')}

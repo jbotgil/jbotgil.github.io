@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html, useTexture, RoundedBox, SoftShadows } from '@react-three/drei';
+import { OrbitControls, Html, useTexture, RoundedBox } from '@react-three/drei';
 import { useTheme } from '../theme';
 
 const PALETTE = ['#8b5cf6', '#6366f1', '#22d3ee', '#ec4899', '#a855f7', '#38bdf8', '#a78bfa', '#f472b6'];
@@ -93,6 +93,7 @@ function ProjectSlideshow({ textures, titleKey, t, colors, name }) {
     const matA = useRef();
     const matB = useRef();
     const label = useRef();
+    const lastIdx = useRef(-1);
 
     useEffect(() => {
         matA.current.map = textures[0] || null;
@@ -113,7 +114,8 @@ function ProjectSlideshow({ textures, titleKey, t, colors, name }) {
             matA.current.opacity = 1 - fade;
             matB.current.opacity = fade;
         }
-        if (label.current) {
+        if (label.current && idx !== lastIdx.current) {
+            lastIdx.current = idx;
             label.current.textContent = t(titleKey[idx]);
             label.current.style.borderColor = `${colors[idx]}88`;
         }
@@ -163,77 +165,6 @@ function BigMonitor({ position, ...slides }) {
     );
 }
 
-/* ---- Persona de noche (silueta orgánica) ---- */
-function NightCoder({ dark }) {
-    const body = useRef();
-    const armL = useRef();
-    const armR = useRef();
-    const reduced = useReducedMotion();
-
-    useFrame((state) => {
-        if (reduced) return;
-        const t = state.clock.elapsedTime;
-        body.current.position.y = Math.sin(t * 0.6) * 0.008;
-        const tip = Math.sin(t * 7) * 0.05 + 0.06;
-        armL.current.rotation.x = 0.9 + tip;
-        armR.current.rotation.x = 0.9 - tip;
-    });
-
-    const cloth = dark ? '#23263f' : '#2c3450';
-    const skin = '#d0a37b';
-
-    return (
-        <group position={[0, 0, 0.28]} rotation={[0, Math.PI, 0]}>
-            {/* Silla */}
-            <mesh position={[0, 0.28, 0]}>
-                <cylinderGeometry args={[0.22, 0.28, 0.08, 18]} />
-                <meshStandardMaterial color="#15161f" roughness={0.7} />
-            </mesh>
-            <mesh position={[0, 0.6, 0]}>
-                <cylinderGeometry args={[0.035, 0.04, 0.42, 12]} />
-                <meshStandardMaterial color="#26273a" roughness={0.5} metalness={0.5} />
-            </mesh>
-            <RoundedBox args={[0.46, 0.1, 0.46]} radius={0.04} smoothness={3} position={[0, 0.8, 0]}>
-                <meshStandardMaterial color={dark ? '#1b1d30' : '#3a4060'} roughness={0.85} />
-            </RoundedBox>
-            <RoundedBox args={[0.44, 0.62, 0.1]} radius={0.045} smoothness={3} position={[0, 1.32, -0.28]} rotation={[-0.15, 0, 0]}>
-                <meshStandardMaterial color={dark ? '#1b1d30' : '#3a4060'} roughness={0.85} />
-            </RoundedBox>
-
-            {/* Cuerpo */}
-            <group ref={body}>
-                <mesh position={[0, 1.25, 0.02]}>
-                    <capsuleGeometry args={[0.17, 0.5, 4, 12]} />
-                    <meshStandardMaterial color={cloth} roughness={0.8} />
-                </mesh>
-                <mesh position={[0, 1.82, 0.02]}>
-                    <sphereGeometry args={[0.14, 20, 20]} />
-                    <meshStandardMaterial color={skin} roughness={0.7} />
-                </mesh>
-                {/* Brazo izquierdo (tecleando) */}
-                <mesh ref={armL} position={[-0.24, 1.42, 0.02]} rotation={[0.9, 0, 0.2]}>
-                    <capsuleGeometry args={[0.055, 0.4, 4, 10]} />
-                    <meshStandardMaterial color={cloth} roughness={0.8} />
-                </mesh>
-                {/* Brazo derecho (tecleando) */}
-                <mesh ref={armR} position={[0.24, 1.42, 0.02]} rotation={[0.9, 0, -0.2]}>
-                    <capsuleGeometry args={[0.055, 0.4, 4, 10]} />
-                    <meshStandardMaterial color={cloth} roughness={0.8} />
-                </mesh>
-                {/* Piernas */}
-                <mesh position={[0.11, 0.72, 0.02]}>
-                    <capsuleGeometry args={[0.07, 0.42, 4, 10]} />
-                    <meshStandardMaterial color={dark ? '#1a1c2e' : '#2c3350'} roughness={0.85} />
-                </mesh>
-                <mesh position={[-0.11, 0.72, 0.02]}>
-                    <capsuleGeometry args={[0.07, 0.42, 4, 10]} />
-                    <meshStandardMaterial color={dark ? '#1a1c2e' : '#2c3350'} roughness={0.85} />
-                </mesh>
-            </group>
-        </group>
-    );
-}
-
 /* ---- Lámpara de escritorio con luz real ---- */
 function DeskLamp({ dark }) {
     const lightRef = useRef();
@@ -258,7 +189,7 @@ function DeskLamp({ dark }) {
                 <sphereGeometry args={[0.09, 14, 14]} />
                 <meshStandardMaterial emissive="#ffd9a0" emissiveIntensity={3} color="#1a160a" />
             </mesh>
-            <pointLight ref={lightRef} position={[0, 1.05, 0.85]} intensity={dark ? 7 : 3} distance={7} decay={2} color="#ffc98a" castShadow />
+            <pointLight ref={lightRef} position={[0, 1.05, 0.85]} intensity={dark ? 7 : 3} distance={7} decay={2} color="#ffc98a" />
         </group>
     );
 }
@@ -424,7 +355,6 @@ function NightOffice({ projects, t, dark }) {
             <group position={[1.05, 0.68, -0.2]}>
                 <DeskLamp dark={dark} />
             </group>
-            <NightCoder dark={dark} />
             <Plant position={[-4.4, 0, -1.6]} scale={1.1} />
             <Plant position={[4.5, 0, -1.4]} scale={0.85} />
         </group>
@@ -452,14 +382,13 @@ const Experience3D = ({ projects, t }) => {
                 intensity={dark ? 0.35 : 0.5}
                 color="#bcc4ff"
                 castShadow
-                shadow-mapSize={[1024, 1024]}
+                shadow-mapSize={[512, 512]}
                 shadow-camera-left={-6}
                 shadow-camera-right={6}
                 shadow-camera-top={6}
                 shadow-camera-bottom={-6}
             />
             {dark && <pointLight position={[0, 2.6, 1.5]} intensity={2} distance={9} color="#8b9cff" />}
-            <SoftShadows size={14} samples={8} focus={0.4} />
             <NightOffice projects={projects} t={t} dark={dark} />
             <OrbitControls
                 enableZoom={false}
