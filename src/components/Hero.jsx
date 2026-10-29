@@ -10,10 +10,10 @@ const Hero = ({ data }) => {
     return (
         <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-32 md:pt-40 pb-16 md:pb-24">
             {/* Resplandor suave editorial */}
-            <div className="pointer-events-none absolute -top-40 -right-40 h-[560px] w-[560px] rounded-full bg-brand-violet/12 blur-[130px]" />
-            <div className="pointer-events-none absolute top-1/3 -left-40 h-[420px] w-[420px] rounded-full bg-brand-cyan/8 blur-[120px]" />
+            <div className="pointer-events-none absolute -top-24 -right-24 sm:-top-40 sm:-right-40 h-[360px] w-[360px] sm:h-[560px] sm:w-[560px] rounded-full bg-brand-violet/12 blur-[100px] sm:blur-[130px]" />
+            <div className="pointer-events-none absolute top-1/2 sm:top-1/3 -left-24 sm:-left-40 h-[280px] w-[280px] sm:h-[420px] sm:w-[420px] rounded-full bg-brand-cyan/8 blur-[80px] sm:blur-[120px]" />
 
-            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-8 lg:gap-12 lg:grid-cols-[1.05fr_0.95fr]">
                 {/* Texto */}
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
@@ -21,7 +21,7 @@ const Hero = ({ data }) => {
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
                     <span className="kicker mb-6 inline-block">{t('hero.greeting')}</span>
-                    <h1 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
+                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
                         {data.name}
                     </h1>
                     <div className="text-lg md:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
@@ -74,7 +74,7 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                    className="relative mx-auto w-full max-w-[320px] sm:max-w-[380px] text-center"
+                    className="relative mx-auto w-full max-w-[260px] sm:max-w-[320px] md:max-w-[380px] text-center"
                 >
                     <div className="pointer-events-none absolute -inset-10 rounded-full bg-brand-violet/12 blur-3xl" />
 
@@ -89,8 +89,8 @@ const Hero = ({ data }) => {
                         AI · Big Data
                     </div>
 
-                    {/* Nombre y rol */}
-                    <div className="mt-6">
+                    {/* Nombre y rol — oculto en móvil porque ya está arriba */}
+                    <div className="mt-6 hidden sm:block">
                         <p className="text-base font-bold text-slate-900 dark:text-white">{data.name}</p>
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{t('hero.role1')}</p>
                     </div>
