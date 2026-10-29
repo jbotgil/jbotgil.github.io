@@ -74,13 +74,13 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                    className="relative mx-auto w-full max-w-[260px] sm:max-w-[300px] text-center"
+                    className="relative mx-auto w-full max-w-[320px] sm:max-w-[380px] text-center"
                 >
-                    <div className="pointer-events-none absolute -inset-8 rounded-full bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-3xl" />
+                    <div className="pointer-events-none absolute -inset-10 rounded-full bg-brand-violet/12 blur-3xl" />
 
-                    {/* Anillo de gradiente */}
-                    <div className="rounded-full p-1.5 shadow-card-lg" style={{ background: 'linear-gradient(135deg, #6d5cf6, #22d3ee)' }}>
-                        <img src="/assets/images/profile.png" alt={data.name} className="aspect-square w-full rounded-full object-cover border-4 border-[#f9fafc] dark:border-[#09090f]" />
+                    {/* Foto circular */}
+                    <div className="rounded-full shadow-card-lg overflow-hidden relative">
+                        <img src="/assets/images/profile.png" alt={data.name} className="aspect-square w-full rounded-full object-cover" />
                     </div>
 
                     {/* Badge flotante */}
