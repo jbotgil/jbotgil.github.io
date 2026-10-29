@@ -46,8 +46,8 @@ const Nav = () => {
             <div className="flex items-center gap-2 px-1">
                 {/* Wordmark */}
                 <a href="#top" className="hidden md:flex items-center gap-2 mr-3 pl-2 text-sm font-bold text-slate-800 dark:text-white">
-                    <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan grid place-items-center text-white text-xs font-extrabold shadow-lg">
-                        {(portfolioData.name || 'J').charAt(0)}
+                    <span className="h-8 w-8 rounded-full bg-gradient-to-tr from-brand-violet to-brand-cyan grid place-items-center text-white text-xs font-extrabold shadow-lg overflow-hidden">
+                        <img src="/assets/images/profile.png" alt={portfolioData.name} className="h-full w-full object-cover" />
                     </span>
                     <span className="max-w-[120px] truncate">{portfolioData.name}</span>
                 </a>
