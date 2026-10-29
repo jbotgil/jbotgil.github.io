@@ -1,86 +1,76 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Github, Star, X, Folder } from 'lucide-react';
+import { ArrowUpRight, Github, Star, X, Folder } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const ProjectCard = ({ project, index, onClick, t }) => (
-    <motion.div
-        layoutId={`project-card-${index}`}
-        onClick={onClick}
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: index * 0.08 }}
-        className={`group relative rounded-2xl overflow-hidden glass hover:border-transparent transition-all duration-300 flex flex-col h-full cursor-pointer hover:-translate-y-2 ${project.featured ? 'md:col-span-2' : ''}`}
-    >
-        {/* Glow en hover (solo featured) */}
-        {project.featured && (
-            <div className="absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{ background: 'linear-gradient(135deg, rgba(56,189,248,0.5), rgba(168,85,247,0.4), rgba(236,72,153,0.35))', filter: 'blur(14px)' }} />
-        )}
+const ProjectCard = ({ project, index, onClick, t }) => {
+    const tagsRaw = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
+    const tags = Array.isArray(tagsRaw) ? tagsRaw : [];
 
-        <div className="relative h-44 md:h-52 overflow-hidden shrink-0 rounded-t-2xl">
-            <motion.img
-                layoutId={`project-image-${index}`}
-                src={project.image}
-                alt={t(project.title)}
-                className="w-full h-full object-cover transform group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700"
-            />
-            {/* Overlay de gradiente inferior */}
-            <div className="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+    return (
+        <motion.article
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, delay: index * 0.06 }}
+            onClick={onClick}
+            className={`group relative rounded-3xl overflow-hidden glass cursor-pointer transition-all duration-300 hover:-translate-y-2 hover:shadow-glass-lg ${project.featured ? 'md:col-span-2 lg:col-span-2' : ''}`}
+        >
             {project.featured && (
-                <div className="absolute top-3 right-3 z-20 rounded-full px-3 py-1 text-xs font-bold text-primary flex items-center gap-1 shadow-lg"
-                    style={{ background: 'linear-gradient(135deg, #38bdf8, #a855f7)' }}>
-                    <Star size={12} className="fill-current" /> {t('projects.featured_tag', 'Destacado')}
-                </div>
+                <div className="absolute inset-0 rounded-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.35), rgba(34,211,238,0.25))', filter: 'blur(24px)' }} />
             )}
-        </div>
 
-        <div className="p-6 flex flex-col flex-grow relative">
-            {/* Icono superior */}
-            <div className="absolute -top-5 right-6 p-2.5 rounded-xl glass text-brand-sky shadow-card group-hover:shadow-glow transition-shadow duration-300">
-                <Folder size={18} />
+            <div className="relative h-48 md:h-56 overflow-hidden">
+                <img
+                    src={project.image}
+                    alt={t(project.title)}
+                    loading="lazy"
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent" />
+                {project.featured && (
+                    <div className="absolute top-4 right-4 rounded-full px-3 py-1 text-[11px] font-bold text-white flex items-center gap-1 shadow-lg"
+                        style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)' }}>
+                        <Star size={11} className="fill-current" /> {t('projects.featured_tag')}
+                    </div>
+                )}
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-3">
-                {(() => {
-                    const tags = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
-                    return Array.isArray(tags) ? tags.slice(0, 4).map(tag => (
-                        <span key={tag} className="text-[10px] font-mono text-brand-sky bg-brand-sky/10 border border-brand-sky/20 px-2 py-0.5 rounded-md">
+            <div className="relative p-6">
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {tags.slice(0, 4).map((tag) => (
+                        <span key={tag} className="text-[10px] font-mono text-brand-violet bg-brand-violet/10 border border-brand-violet/20 px-2 py-0.5 rounded-md">
                             {tag}
                         </span>
-                    )) : null;
-                })()}
-                {(() => {
-                    const tags = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
-                    return Array.isArray(tags) && tags.length > 4 ? (
-                        <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-md">
+                    ))}
+                    {tags.length > 4 && (
+                        <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-slate-500/10 px-2 py-0.5 rounded-md">
                             +{tags.length - 4}
                         </span>
-                    ) : null;
-                })()}
-            </div>
+                    )}
+                </div>
 
-            <motion.h3 layoutId={`project-title-${index}`} className={`text-lg font-bold mb-2 ${project.featured ? 'text-gradient' : 'text-white group-hover:text-brand-sky'} transition-colors`}>
-                {t(project.title)}
-            </motion.h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-start gap-2">
+                    <Folder size={17} className="mt-0.5 shrink-0 text-brand-violet" />
+                    {t(project.title)}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 line-clamp-2 leading-relaxed">
+                    {t(project.description)}
+                </p>
 
-            <p className="text-slate-400 text-sm mb-4 line-clamp-2 leading-relaxed flex-grow">
-                {t(project.description)}
-            </p>
-
-            <div className="mt-auto pt-4 border-t border-white/10">
-                <div className="inline-flex items-center gap-2 text-xs font-medium text-slate-300 group-hover:text-brand-sky transition-colors">
-                    <span className="uppercase tracking-wider">{t('projects.viewProject')}</span>
-                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                <div className="pt-4 border-t border-slate-900/10 dark:border-white/10 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 group-hover:text-brand-violet transition-colors">
+                    {t('projects.viewProject')}
+                    <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
             </div>
-        </div>
-    </motion.div>
-);
+        </motion.article>
+    );
+};
 
 const ProjectModal = ({ project, onClose, t }) => {
-    if (!project) return null;
+    const tagsRaw = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
+    const tags = Array.isArray(tagsRaw) ? tagsRaw : [];
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
@@ -89,65 +79,56 @@ const ProjectModal = ({ project, onClose, t }) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={onClose}
-                className="absolute inset-0 bg-black/85 backdrop-blur-sm"
+                className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
             />
             <motion.div
-                layoutId={`project-card-${project.index}`}
-                className="relative w-full max-w-5xl bg-primary/95 border border-white/10 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col md:flex-row max-h-[90vh]"
+                initial={{ opacity: 0, scale: 0.94, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94, y: 20 }}
+                transition={{ type: 'spring', damping: 26, stiffness: 260 }}
+                className="relative w-full max-w-5xl rounded-[2rem] glass-strong overflow-hidden shadow-glass-lg flex flex-col md:flex-row max-h-[90vh]"
             >
-                {/* Halo superior decorativo */}
-                <div className="absolute -top-32 left-1/4 w-96 h-96 rounded-full bg-brand-violet/20 blur-[110px] pointer-events-none" />
+                <div className="pointer-events-none absolute -top-24 -right-24 h-64 w-64 rounded-full bg-brand-violet/25 blur-[90px]" />
 
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-30 p-2 bg-black/50 hover:bg-white/10 text-white rounded-full border border-white/10 transition-colors"
+                    aria-label="Cerrar"
+                    className="absolute top-4 right-4 z-30 p-2 rounded-full glass text-slate-600 dark:text-slate-300 hover:text-brand-violet transition-colors"
                 >
                     <X size={20} />
                 </button>
 
-                <div className="w-full md:w-1/2 h-64 md:h-auto relative bg-slate-950 flex items-center justify-center">
-                    <motion.img
-                        layoutId={`project-image-${project.index}`}
+                <div className="w-full md:w-1/2 h-64 md:h-auto bg-slate-950/40 dark:bg-slate-950/60 flex items-center justify-center relative overflow-hidden">
+                    <img
                         src={project.image}
                         alt={t(project.title)}
-                        className="max-w-full max-h-full object-contain p-4"
+                        className="max-w-full max-h-full object-contain p-6"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent pointer-events-none" />
                 </div>
 
-                <div className="w-full md:w-1/2 p-6 md:p-8 overflow-y-auto relative">
-                    <div className="flex flex-wrap gap-2 mb-6">
-                        {(() => {
-                            const tags = typeof project.tags === 'string' ? t(project.tags, { returnObjects: true }) : project.tags;
-                            return Array.isArray(tags) ? tags.map(tag => (
-                                <span key={tag} className="text-xs font-mono text-brand-sky bg-brand-sky/10 border border-brand-sky/20 px-3 py-1 rounded-full">
-                                    {tag}
-                                </span>
-                            )) : null;
-                        })()}
+                <div className="w-full md:w-1/2 p-8 overflow-y-auto relative">
+                    <div className="flex flex-wrap gap-2 mb-5">
+                        {tags.map((tag) => (
+                            <span key={tag} className="text-xs font-mono text-brand-violet bg-brand-violet/10 border border-brand-violet/20 px-3 py-1 rounded-full">
+                                {tag}
+                            </span>
+                        ))}
                     </div>
 
-                    <motion.h2 layoutId={`project-title-${project.index}`} className="text-2xl md:text-3xl font-bold text-white mb-4 text-gradient animate-gradient-x">
+                    <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mb-4 text-gradient">
                         {t(project.title)}
-                    </motion.h2>
-
-                    <p className="text-slate-300 leading-relaxed mb-8 text-lg">
+                    </h2>
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-8 text-base">
                         {t(project.description)}
                     </p>
 
-                    <div className="space-y-6">
-                        <div>
-                            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-3">
-                                {t('projects.links', 'Enlaces')}
-                            </h3>
-                            <a href={project.link} target="_blank" rel="noopener noreferrer"
-                                className="btn-gradient !rounded-xl"
-                                style={{ backgroundImage: 'linear-gradient(135deg, #38bdf8 0%, #a855f7 100%)' }}>
-                                <Github size={20} />
-                                {t('projects.viewCode', 'Ver Código')}
-                            </a>
-                        </div>
-                    </div>
+                    <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3">
+                        {t('projects.links')}
+                    </h3>
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                        <Github size={18} />
+                        {t('projects.viewCode')}
+                    </a>
                 </div>
             </motion.div>
         </div>
@@ -159,42 +140,30 @@ const Projects = ({ data, onModalChange }) => {
     const [selectedProject, setSelectedProject] = useState(null);
 
     React.useEffect(() => {
-        if (selectedProject) {
-            document.body.style.overflow = 'hidden';
-            onModalChange && onModalChange(true);
-        } else {
-            document.body.style.overflow = 'unset';
-            onModalChange && onModalChange(false);
-        }
+        document.body.style.overflow = selectedProject ? 'hidden' : '';
+        onModalChange && onModalChange(!!selectedProject);
     }, [selectedProject, onModalChange]);
 
     return (
-        <section id="projects" className="py-24 relative">
-            <div className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <span className="inline-flex items-center gap-2 glass rounded-full px-4 py-1.5 text-sm text-brand-sky mb-4">
-                        <Star size={14} /> {t('projects.title')}
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
-                        <span className="text-gradient animate-gradient-x">{t('projects.subtitle')}</span>
+        <section id="projects" className="relative px-6 py-24 lg:py-28">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <span className="pill mb-5">{t('projects.title')}</span>
+                    <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-4">
+                        <span className="text-gradient">{t('projects.subtitle')}</span>
                     </h2>
-                    <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+                    <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg">
                         {t('projects.description')}
                     </p>
-                </motion.div>
+                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {data.projects.map((project, index) => (
                         <ProjectCard
                             key={index}
                             project={project}
                             index={index}
-                            onClick={() => setSelectedProject({ ...project, index })}
+                            onClick={() => setSelectedProject(project)}
                             t={t}
                         />
                     ))}
@@ -203,11 +172,7 @@ const Projects = ({ data, onModalChange }) => {
 
             <AnimatePresence>
                 {selectedProject && (
-                    <ProjectModal
-                        project={selectedProject}
-                        onClose={() => setSelectedProject(null)}
-                        t={t}
-                    />
+                    <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} t={t} />
                 )}
             </AnimatePresence>
         </section>

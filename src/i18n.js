@@ -22,6 +22,13 @@ const resources = {
             "about.subtitle": "mí",
             "about.description": "Apasionado por el aprendizaje continuo y el crecimiento personal y profesional. Disfruto compartiendo los beneficios de la tecnología con quienes me rodean, facilitando su comprensión y uso, con el objetivo de aproximar la informática a la comunidad y mostrar cómo puede mejorar nuestras vidas.",
             "about.location": "Alzira, Comunidad Valenciana",
+            "about.spotlight": "Sobre mí",
+            "about.hl_role": "Rol",
+            "about.hl_location": "Ubicación",
+            "about.hl_available": "Disponibilidad",
+            "about.hl_available_value": "Abierto a oportunidades y colaboraciones",
+            "about.cta_github": "Ver GitHub",
+            "about.card_bio": "Desarrollador de software con foco en soluciones eficientes. Interesado en inteligencia artificial, big data y en acercar la tecnología a las personas.",
 
             "projects.title": "Proyectos",
             "projects.subtitle": "Destacados",
@@ -65,6 +72,7 @@ const resources = {
 
             // Certificaciones
             "experience.certifications": "Certificaciones",
+            "experience.viewCredential": "Ver credencial",
 
             "cert.aws.name": "AWS Academy Graduate - AWS Academy Cloud Foundations",
             "cert.aws.issuer": "Amazon Web Services (AWS)",
@@ -158,6 +166,13 @@ const resources = {
             "about.subtitle": "me",
             "about.description": "Passionate about continuous learning and personal and professional growth. I enjoy sharing the benefits of technology with those around me, facilitating its understanding and use, with the goal of bringing computing closer to the community and showing how it can improve our lives.",
             "about.location": "Alzira, Valencia Area",
+            "about.spotlight": "In brief",
+            "about.hl_role": "Role",
+            "about.hl_location": "Location",
+            "about.hl_available": "Availability",
+            "about.hl_available_value": "Open to opportunities and collaborations",
+            "about.cta_github": "View GitHub",
+            "about.card_bio": "Software developer focused on efficient solutions. Interested in AI, big data, and bringing technology closer to people.",
 
             "projects.title": "Featured",
             "projects.subtitle": "Projects",
@@ -201,6 +216,7 @@ const resources = {
 
             // Certificaciones
             "experience.certifications": "Certifications",
+            "experience.viewCredential": "View credential",
 
             "cert.aws.name": "AWS Academy Graduate - AWS Academy Cloud Foundations",
             "cert.aws.issuer": "Amazon Web Services (AWS)",
