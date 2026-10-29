@@ -1,10 +1,12 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
+import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Stars, Float, Sparkles, Html } from '@react-three/drei';
 import { useTheme } from '../theme';
 
 const PALETTE = ['#8b5cf6', '#6366f1', '#22d3ee', '#ec4899', '#a855f7', '#38bdf8', '#a78bfa', '#f472b6'];
 const ORBIT_RADIUS = 3.1;
+const POINTS_PER_ORB = 150;
 
 function useReducedMotion() {
     return useMemo(() => {
@@ -27,32 +29,88 @@ function useScrollOffset() {
     return ref;
 }
 
-function Planet({ index, total, title, t }) {
+function hexToVec3(hex) {
+    const h = hex.replace('#', '');
+    const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+    const n = parseInt(full, 16);
+    return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+function orbBaseY(index) {
+    return index % 3 === 0 ? 0.55 : index % 3 === 1 ? -0.55 : 0;
+}
+
+/* Nube de puntos en esfera (distribución de Fibonacci) */
+function useSpherePoints(count, radius) {
+    return useMemo(() => {
+        const positions = new Float32Array(count * 3);
+        for (let i = 0; i < count; i++) {
+            const y = 1 - (i / (count - 1)) * 2;
+            const r = Math.sqrt(1 - y * y);
+            const theta = Math.PI * i * 0.618033988749895;
+            positions[i * 3] = Math.cos(theta) * r * radius;
+            positions[i * 3 + 1] = y * radius;
+            positions[i * 3 + 2] = Math.sin(theta) * r * radius;
+        }
+        return positions;
+    }, [count, radius]);
+}
+
+/* Proyecto = "astro de datos": nube de puntos + sombra wireframe + etiqueta */
+function DataOrb({ index, total, title, t }) {
     const group = useRef();
+    const core = useRef();
+    const halo = useRef();
+    const material = useRef();
     const [hovered, setHovered] = useState(false);
     const reduced = useReducedMotion();
 
     const angle = (index / total) * Math.PI * 2;
+    const x = Math.cos(angle) * ORBIT_RADIUS;
+    const z = Math.sin(angle) * ORBIT_RADIUS;
     const color = PALETTE[index % PALETTE.length];
+    const points = useSpherePoints(POINTS_PER_ORB, 0.62);
 
     useFrame((state) => {
         const time = state.clock.elapsedTime;
-        if (!reduced) {
-            group.current.position.y = Math.sin(time * 0.7 + index * 1.7) * 0.3;
+        if (reduced) return;
+        core.current.rotation.x = time * 0.25 + index;
+        core.current.rotation.y = time * 0.35 + index;
+        halo.current.rotation.y = -time * 0.3;
+        const pulse = 1 + Math.sin(time * 1.5 + index * 1.3) * 0.08;
+        core.current.scale.setScalar(hovered ? 1.25 * pulse : pulse);
+        if (material.current) {
+            material.current.size = 0.09 * (1 + Math.sin(time * 2.2 + index) * 0.25);
+            material.current.opacity = 0.7 + Math.sin(time * 2 + index) * 0.25;
         }
-        group.current.rotation.z = time * 0.2 + index;
     });
 
     return (
-        <group position={[Math.cos(angle) * ORBIT_RADIUS, 0, Math.sin(angle) * ORBIT_RADIUS]}>
-            <group ref={group} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
-                <mesh scale={hovered ? 0.72 : 0.55}>
-                    <sphereGeometry args={[1, 16, 16]} />
-                    <meshStandardMaterial color={color} roughness={0.35} metalness={0.55} flatShading emissive={color} emissiveIntensity={hovered ? 0.8 : 0.35} />
-                </mesh>
-                <mesh>
-                    <sphereGeometry args={[1, 10, 10]} />
-                    <meshBasicMaterial color={color} wireframe transparent opacity={0.25} />
+        <group position={[x, orbBaseY(index), z]}>
+            <group
+                ref={core}
+                onPointerOver={() => setHovered(true)}
+                onPointerOut={() => setHovered(false)}
+            >
+                {/* Nube de puntos (los "datos") */}
+                <points frustumCulled={false}>
+                    <bufferGeometry>
+                        <bufferAttribute attach="attributes-position" args={[points, 3]} />
+                    </bufferGeometry>
+                    <pointsMaterial
+                        ref={material}
+                        size={0.09}
+                        color={color}
+                        transparent
+                        depthWrite={false}
+                        sizeAttenuation
+                        blending={THREE.AdditiveBlending}
+                    />
+                </points>
+                {/* Sombra de forma */}
+                <mesh scale={1.1}>
+                    <icosahedronGeometry args={[0.6, 1]} />
+                    <meshBasicMaterial color={color} wireframe transparent opacity={0.18} />
                 </mesh>
                 <Html
                     center
@@ -69,14 +127,23 @@ function Planet({ index, total, title, t }) {
                     </div>
                 </Html>
             </group>
+
+            {/* Aro halo sutil */}
+            <mesh ref={halo} rotation={[Math.PI / 2, 0, 0]}>
+                <torusGeometry args={[0.9, 0.012, 6, 48]} />
+                <meshBasicMaterial color={color} transparent opacity={0.3} depthWrite={false} />
+            </mesh>
         </group>
     );
 }
 
+/* Núcleo central = "hub neuronal" */
 function Core({ name }) {
     const inner = useRef();
     const wire = useRef();
+    const halo = useRef();
     const reduced = useReducedMotion();
+    const haloPoints = useSpherePoints(70, 1.9);
 
     useFrame((state) => {
         if (reduced) return;
@@ -85,20 +152,28 @@ function Core({ name }) {
         inner.current.rotation.y = time * 0.28;
         wire.current.rotation.x = -time * 0.12;
         wire.current.rotation.y = -time * 0.18;
+        halo.current.rotation.y = time * 0.1;
     });
 
     return (
-        <Float speed={reduced ? 0 : 1.4} rotationIntensity={reduced ? 0 : 0.5} floatIntensity={reduced ? 0 : 0.7}>
+        <Float speed={reduced ? 0 : 1.2} rotationIntensity={reduced ? 0 : 0.4} floatIntensity={reduced ? 0 : 0.55}>
             <group>
                 <mesh ref={inner}>
-                    <icosahedronGeometry args={[1.15, 1]} />
+                    <icosahedronGeometry args={[1.05, 1]} />
                     <meshStandardMaterial color="#8b5cf6" roughness={0.25} metalness={0.6} flatShading emissive="#8b5cf6" emissiveIntensity={0.45} />
                 </mesh>
                 <mesh ref={wire}>
-                    <icosahedronGeometry args={[1.55, 1]} />
+                    <icosahedronGeometry args={[1.42, 1]} />
                     <meshBasicMaterial color="#22d3ee" wireframe transparent opacity={0.3} />
                 </mesh>
-                <Sparkles count={50} scale={7} size={1.6} speed={0.4} opacity={0.5} color="#a5b4fc" />
+                {/* Halo de datos alrededor del núcleo */}
+                <points ref={halo}>
+                    <bufferGeometry>
+                        <bufferAttribute attach="attributes-position" args={[haloPoints, 3]} />
+                    </bufferGeometry>
+                    <pointsMaterial size={0.035} color="#a5b4fc" transparent opacity={0.45} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+                </points>
+                <Sparkles count={46} scale={6.5} size={1.6} speed={0.4} opacity={0.5} color="#a5b4fc" />
                 <Html center distanceFactor={7} zIndexRange={[40, 0]} style={{ pointerEvents: 'none' }}>
                     <div
                         className="whitespace-nowrap rounded-full px-4 py-1.5 text-xs font-bold tracking-wide backdrop-blur-md"
@@ -122,19 +197,46 @@ function Scene({ projects, t, dark }) {
         group.current.rotation.y = scroll.current * 0.0012 + (reduced ? 0.03 : time * 0.08);
     });
 
-    const renderPlanet = (project, index) => (
-        <Planet key={index} index={index} total={projects.length} title={project.title} t={t} />
-    );
+    /* Conexiones núcleo → orbes (líneas tipo red neuronal) */
+    const beams = useMemo(() => {
+        const positions = new Float32Array(projects.length * 6);
+        const colors = new Float32Array(projects.length * 6);
+        projects.forEach((_, index) => {
+            const a = (index / projects.length) * Math.PI * 2;
+            const x = Math.cos(a) * ORBIT_RADIUS;
+            const z = Math.sin(a) * ORBIT_RADIUS;
+            const y = orbBaseY(index);
+            positions[index * 6] = 0; positions[index * 6 + 1] = 0; positions[index * 6 + 2] = 0;
+            positions[index * 6 + 3] = x; positions[index * 6 + 4] = y; positions[index * 6 + 5] = z;
+            const c = hexToVec3(PALETTE[index % PALETTE.length]);
+            colors[index * 6] = c[0]; colors[index * 6 + 1] = c[1]; colors[index * 6 + 2] = c[2];
+            colors[index * 6 + 3] = c[0]; colors[index * 6 + 4] = c[1]; colors[index * 6 + 5] = c[2];
+        });
+        return { positions, colors };
+    }, [projects]);
 
     return (
         <group ref={group}>
             <Core name="Javier Botella Gil" />
-            {/* Órbita */}
+
+            {/* Conexiones nodo → nodo */}
+            <lineSegments>
+                <bufferGeometry>
+                    <bufferAttribute attach="attributes-position" args={[beams.positions, 3]} />
+                    <bufferAttribute attach="attributes-color" args={[beams.colors, 3]} />
+                </bufferGeometry>
+                <lineBasicMaterial vertexColors transparent opacity={0.4} depthWrite={false} blending={THREE.AdditiveBlending} />
+            </lineSegments>
+
+            {/* Anillo de órbita tenue */}
             <mesh rotation={[Math.PI / 2.15, 0, 0]}>
-                <torusGeometry args={[ORBIT_RADIUS, 0.015, 8, 96]} />
-                <meshBasicMaterial color={dark ? '#8b5cf6' : '#6366f1'} transparent opacity={0.45} />
+                <torusGeometry args={[ORBIT_RADIUS, 0.01, 6, 96]} />
+                <meshBasicMaterial color={dark ? '#8b5cf6' : '#6366f1'} transparent opacity={0.3} />
             </mesh>
-            {projects.map(renderPlanet)}
+
+            {projects.map((project, index) => (
+                <DataOrb key={index} index={index} total={projects.length} title={project.title} t={t} />
+            ))}
         </group>
     );
 }

@@ -15,7 +15,7 @@ const resources = {
             "hero.role1": "Desarrollador de Software",
             "hero.role2": "Especialista en IA y Big Data",
             "hero.description": "Construyendo soluciones eficientes y explorando el mundo de los datos.",
-            "hero.hint": "Arrastra para girar · Pasa el cursor por un planeta",
+            "hero.hint": "Arrastra para girar · Pasa el cursor por un nodo",
             "hero.downloadCV": "Descargar CV",
             "hero.contactMe": "Contáctame",
 
@@ -154,7 +154,7 @@ const resources = {
             "hero.role1": "Software Developer",
             "hero.role2": "AI & Big Data Specialist",
             "hero.description": "Building efficient solutions and exploring the world of data.",
-            "hero.hint": "Drag to rotate · Hover a planet",
+            "hero.hint": "Drag to rotate · Hover a node",
             "hero.downloadCV": "Download CV",
             "hero.contactMe": "Contact Me",
 
