@@ -20,13 +20,8 @@ const Hero = ({ data }) => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
-<<<<<<< HEAD
-                    <span className="kicker mb-6 inline-block">{t('hero.greeting')}</span>
-                    <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
-=======
-                    <span className="kicker mb-2 inline-block">{t('hero.greeting')}</span>
-                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
->>>>>>> 7ac8a513f51277078377f47e24eda26a9a62c51a
+<span className="kicker mb-2 inline-block">{t('hero.greeting')}</span>
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
                         {data.name}
                     </h1>
                     <div className="text-base md:text-lg lg:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
