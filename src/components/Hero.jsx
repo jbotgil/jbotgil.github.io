@@ -74,24 +74,23 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
-                    className="relative mx-auto w-full max-w-md lg:max-w-none"
+                    className="relative mx-auto w-full max-w-xs sm:max-w-sm"
                 >
-                    <div className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-2xl" />
-                    <div className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-slate-100 shadow-card-lg dark:border-white/10 dark:bg-white/5 aspect-[4/5]">
+                    <div className="pointer-events-none absolute -inset-3 rounded-[2rem] bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-2xl" />
+                    <div className="relative overflow-hidden rounded-[1.75rem] border border-slate-200/80 bg-slate-100 shadow-card-lg dark:border-white/10 dark:bg-white/5 aspect-square">
                         <img src="/assets/images/profile.png" alt={data.name} className="h-full w-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/20 via-transparent to-transparent" />
 
                         {/* Nombre en la foto */}
-                        <div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-2xl bg-white/80 px-4 py-3 backdrop-blur-md dark:bg-[#0d0d16]/70 dark:border dark:border-white/10">
-                            <div>
-                                <p className="text-sm font-bold text-slate-900 dark:text-white">{data.name}</p>
+                        <div className="absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-2xl bg-white/85 px-4 py-3 backdrop-blur-md dark:bg-[#0d0d16]/75 dark:border dark:border-white/10">
+                            <div className="min-w-0">
+                                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{data.name}</p>
                                 <p className="text-xs text-slate-500 dark:text-slate-400">{t('hero.role1')}</p>
                             </div>
-                            <span className="chip chip-brand">{t('about.hl_available').toUpperCase()}</span>
                         </div>
 
                         {/* Badge flotante */}
-                        <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-mono font-bold text-white"
+                        <div className="absolute right-3 top-3 rounded-full px-3 py-1.5 text-[11px] font-mono font-bold text-white"
                             style={{ background: 'linear-gradient(135deg, #6d5cf6, #5b5bd6)' }}>
                             AI · Big Data
                         </div>

@@ -24,6 +24,8 @@ const resources = {
             "about.description": "Apasionado por el aprendizaje continuo y el crecimiento personal y profesional. Disfruto compartiendo los beneficios de la tecnología con quienes me rodean, facilitando su comprensión y uso, con el objetivo de aproximar la informática a la comunidad y mostrar cómo puede mejorar nuestras vidas.",
             "about.location": "Alzira, Comunidad Valenciana",
             "about.spotlight": "Sobre mí",
+            "about.summary_heading": "En resumen",
+            "about.auto_title": "Automatizaciones",
             "about.hl_role": "Rol",
             "about.hl_location": "Ubicación",
             "about.hl_available": "Disponibilidad",
@@ -48,7 +50,7 @@ const resources = {
 
             // Experiencia laboral
             "experience.xanfra.title": "Programador full stack",
-            "experience.xanfra.period": "jun. 2026 - actualidad · 1 mes",
+            "experience.xanfra.period": "jun. 2026 - actualidad · 5 meses",
             "experience.xanfra.desc": "Alzira, Comunidad Valenciana / Comunitat Valenciana, España · Presencial\n\nRol híbrido enfocado en la gestión operativa diaria y la transformación digital interna mediante el desarrollo de software.\n\nResponsabilidades tecnológicas:\n• Diseño, arquitectura y desarrollo desde cero de una aplicación web destinada a centralizar y sincronizar las órdenes de trabajo entre los diferentes dispositivos del centro.\n• Implementación de la lógica del servidor, gestión de bases de datos y desarrollo de la interfaz de usuario adaptada.\n• Aseguramiento de la sincronización de datos mediante WebSockets para garantizar la consistencia en tiempo real.\n\nStack tecnológico: Python, FastAPI, JavaScript, React, WebSockets, Docker, PostgreSQL.\n\nResponsabilidades administrativas:\n• Coordinación de flujos de trabajo internos y registro de datos en sistemas de gestión.",
 
             "experience.seipasa.title": "Desarrollador de Software Junior",
@@ -163,6 +165,8 @@ const resources = {
             "about.description": "Passionate about continuous learning and personal and professional growth. I enjoy sharing the benefits of technology with those around me, facilitating its understanding and use, with the goal of bringing computing closer to the community and showing how it can improve our lives.",
             "about.location": "Alzira, Valencia Area",
             "about.spotlight": "In brief",
+            "about.summary_heading": "Summary",
+            "about.auto_title": "Automations",
             "about.hl_role": "Role",
             "about.hl_location": "Location",
             "about.hl_available": "Availability",
@@ -187,7 +191,7 @@ const resources = {
 
             // Work Experience
             "experience.xanfra.title": "Full Stack Developer",
-            "experience.xanfra.period": "Jun 2026 - Present · 1 month",
+            "experience.xanfra.period": "Jun 2026 - Present · 5 months",
             "experience.xanfra.desc": "Alzira, Valencian Community, Spain · On-site\n\nHybrid role focused on daily operational management and internal digital transformation through software development.\n\nTech Responsibilities:\n• End-to-end design, architecture, and development of a web application to centralize and synchronize work orders across center devices.\n• Implementation of server-side logic, database management, and customized user interface development.\n• Ensuring data synchronization via WebSockets to guarantee real-time consistency.\n\nTech Stack: Python, FastAPI, JavaScript, React, WebSockets, Docker, PostgreSQL.\n\nAdministrative Responsibilities:\n• Coordination of internal workflows and data logging in management systems.",
 
             "experience.seipasa.title": "Junior Software Developer",

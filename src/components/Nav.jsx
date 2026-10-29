@@ -32,10 +32,6 @@ const Nav = () => {
             className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#f9fafc]/80 dark:bg-[#09090f]/80 backdrop-blur-md border-b border-slate-200/70 dark:border-white/10' : 'bg-transparent border-b border-transparent'}`}
         >
             <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 md:px-8">
-                <a href="#top" className="font-mono text-base font-bold text-slate-900 dark:text-white">
-                    jbg<span className="text-brand-violet">.</span>
-                </a>
-
                 {/* Enlaces escritorio */}
                 <div className="hidden md:flex items-center gap-1">
                     {links.map((l) => (
