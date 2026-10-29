@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Heart, Send } from 'lucide-react';
+import { Github, Linkedin, Mail, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = ({ data }) => {
@@ -50,10 +50,8 @@ const Footer = ({ data }) => {
                 </motion.div>
 
                 <div className="border-t border-slate-200 dark:border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400 dark:text-slate-500">
-                    <p className="flex items-center gap-1.5">
-                        {t('footer.made_with')} <Heart size={13} className="text-brand-violet fill-current" /> {t('footer.by')} {data.name}
-                    </p>
                     <p>© {new Date().getFullYear()} {t('footer.rights')}</p>
+                    <p>{data.name}</p>
                 </div>
             </div>
         </footer>
