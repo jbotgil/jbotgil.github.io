@@ -3,7 +3,7 @@ export const portfolioData = {
     title: "Desarrollador de Software",
     roles: [
         "Desarrollador de Software",
-        "Estudiante de IA y Big Data"
+        "Especialista en IA y Big Data"
     ],
     email: "javibotella05@gmail.com",
     location: "Alzira, Comunidad Valenciana",
@@ -60,22 +60,6 @@ export const portfolioData = {
             "image": "assets/images/projects/gestionDeEventosKotlin/preview.png",
             "link": "https://github.com/jbotgil/GestionDeEventos.git",
             "tags": "projects.events.tags",
-            "featured": false
-        },
-        {
-            "title": "projects.login.title",
-            "description": "projects.login.desc",
-            "image": "assets/images/projects/loginWithJavaFx/loginWithJava.png",
-            "link": "https://github.com/jbotgil/LoginWithJavaFxMaven.git",
-            "tags": "projects.login.tags",
-            "featured": false
-        },
-        {
-            "title": "projects.card.title",
-            "description": "projects.card.desc",
-            "image": "assets/images/projects/tarjetaPresentacion/tarjetaPresentacion1.png",
-            "link": "https://github.com/jbotgil/PresentationLetterWithKotlin.git",
-            "tags": "projects.card.tags",
             "featured": false
         }
     ],

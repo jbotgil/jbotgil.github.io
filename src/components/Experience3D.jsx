@@ -4,7 +4,7 @@ import { OrbitControls, Stars, Float, Sparkles, Html } from '@react-three/drei';
 import { useTheme } from '../theme';
 
 const PALETTE = ['#8b5cf6', '#6366f1', '#22d3ee', '#ec4899', '#a855f7', '#38bdf8', '#a78bfa', '#f472b6'];
-const ORBIT_RADIUS = 3.6;
+const ORBIT_RADIUS = 3.1;
 
 function useReducedMotion() {
     return useMemo(() => {
@@ -148,15 +148,15 @@ const Experience3D = ({ projects, t }) => {
             flat
             dpr={[1, 1.5]}
             gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-            camera={{ position: [0, 1.3, 9.5], fov: 45 }}
+            camera={{ position: [2.4, 1.3, 9.5], fov: 46 }}
             style={{ position: 'absolute', inset: 0 }}
         >
             <color attach="background" args={[dark ? '#0b0817' : '#edf0fb']} />
-            <fog attach="fog" args={[dark ? '#0b0817' : '#edf0fb', 13, 30]} />
+            <fog attach="fog" args={[dark ? '#0b0817' : '#edf0fb', 12, 27]} />
             <ambientLight intensity={0.85} />
             <pointLight position={[6, 5, 6]} intensity={1.4} color="#8b5cf6" />
             <pointLight position={[-6, -3, -4]} intensity={1.1} color="#22d3ee" />
-            <Stars radius={42} depth={22} count={1200} factor={3.4} saturation={0} fade speed={0.6} />
+            <Stars radius={42} depth={22} count={1100} factor={3.4} saturation={0} fade speed={0.6} />
             <Scene projects={projects} t={t} dark={dark} />
             <OrbitControls
                 enableZoom={false}
@@ -165,10 +165,10 @@ const Experience3D = ({ projects, t }) => {
                 autoRotateSpeed={0.7}
                 enableDamping
                 dampingFactor={0.06}
-                minDistance={5}
-                maxDistance={13}
-                minPolarAngle={Math.PI / 3.4}
-                maxPolarAngle={Math.PI / 1.8}
+                minDistance={4.5}
+                maxDistance={12}
+                minPolarAngle={Math.PI / 3.2}
+                maxPolarAngle={Math.PI / 1.9}
             />
         </Canvas>
     );

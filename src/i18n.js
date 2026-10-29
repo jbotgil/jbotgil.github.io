@@ -13,7 +13,7 @@ const resources = {
 
             "hero.greeting": "Hola, soy",
             "hero.role1": "Desarrollador de Software",
-            "hero.role2": "Estudiante de IA y Big Data",
+            "hero.role2": "Especialista en IA y Big Data",
             "hero.description": "Construyendo soluciones eficientes y explorando el mundo de los datos.",
             "hero.hint": "Arrastra para girar · Pasa el cursor por un planeta",
             "hero.downloadCV": "Descargar CV",
@@ -61,7 +61,7 @@ const resources = {
             // Formacion académica
             "education.ai.degree": "C.E. Big Data e Inteligencia Artificial",
             "education.ai.school": "I.E.S. Eduardo Primo Marqués",
-            "education.ai.period": "oct. 2025 – actualidad",
+            "education.ai.period": "oct. 2025 – oct. 2026",
 
             "education.dam.degree": "C.F.G.S. Desarrollo de aplicaciones multiplataforma",
             "education.dam.school": "I.E.S. Eduardo Primo Marqués",
@@ -110,8 +110,6 @@ const resources = {
             "projects.bedrock.title": "Agente de Estudio con IA (Amazon Bedrock)",
             "projects.vision.title": "Buscador visual por similitud",
             "projects.events.title": "Gestión de eventos en Android",
-            "projects.login.title": "LoginWithJava",
-            "projects.card.title": "Tarjeta de Presentación",
             "projects.fuel.title": "Análisis de Precios de Combustible - Ribera Alta & La Costera",
             "projects.deepstudy.title": "DeepStudy AI",
 
@@ -120,8 +118,6 @@ const resources = {
             "projects.bedrock.tags": ["AI", "AWS Bedrock", "Python"],
             "projects.vision.tags": ["Python", "Computer Vision"],
             "projects.events.tags": ["Kotlin", "Android", "Firebase"],
-            "projects.login.tags": ["Java", "JavaFX", "Maven"],
-            "projects.card.tags": ["Kotlin", "Android"],
             "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
             "projects.deepstudy.tags": ["AI", "RAG", "Docker", "Next.js", "FastAPI", "n8n", "Qdrant", "Ollama", "PostgreSQL"],
 
@@ -139,8 +135,6 @@ const resources = {
             "projects.bedrock.desc": "Agente inteligente impulsado por Amazon Bedrock para el análisis de documentos PDF. Facilita la interacción conversacional con el contenido de apuntes y documentos técnicos.",
             "projects.vision.desc": "Sistema de búsqueda de imágenes similares mediante análisis de visión artificial. Localiza archivos dentro de directorios locales basándose en la extracción de características de una foto de entrada.",
             "projects.events.desc": "Aplicación móvil para la organización y administración de eventos. Permite la creación, edición y gestión eficiente de calendarios y asistentes en dispositivos Android.",
-            "projects.login.desc": "Sistema de autenticación desarrollado con Java y JavaFX. Proporciona una interfaz intuitiva para el inicio de sesión y la gestión de usuarios mediante una arquitectura basada en Maven.",
-            "projects.card.desc": "Desarrollo de una interfaz visual interactiva en Kotlin. Aplicación móvil diseñada para mostrar información de contacto de forma dinámica en el ecosistema Android.",
             "projects.fuel.desc": "Herramienta ETL y dashboard interactivo para monitorizar la evolución de precios de gasolina y diésel mediante la API del Ministerio de Industria.",
             "projects.deepstudy.desc": "Plataforma basada en RAG que permite realizar consultas conversacionales sobre una colección de documentos PDF. Extrae información relevante de manera inteligente y estructurada mediante Large Language Models.",
 
@@ -158,7 +152,7 @@ const resources = {
 
             "hero.greeting": "Hi, I'm",
             "hero.role1": "Software Developer",
-            "hero.role2": "AI & Big Data Student",
+            "hero.role2": "AI & Big Data Specialist",
             "hero.description": "Building efficient solutions and exploring the world of data.",
             "hero.hint": "Drag to rotate · Hover a planet",
             "hero.downloadCV": "Download CV",
@@ -206,7 +200,7 @@ const resources = {
             // Formación academica
             "education.ai.degree": "Specialization Course in Artificial Intelligence and Big Data",
             "education.ai.school": "I.E.S. Eduardo Primo Marqués",
-            "education.ai.period": "Oct 2025 – Present",
+            "education.ai.period": "Oct 2025 – Oct 2026",
 
             "education.dam.degree": "Associate Degree in Multi-platform Application Development",
             "education.dam.school": "I.E.S. Eduardo Primo Marqués",
@@ -255,8 +249,6 @@ const resources = {
             "projects.bedrock.title": "AI Study Agent (Amazon Bedrock)",
             "projects.vision.title": "Visual Similarity Search Engine",
             "projects.events.title": "Android Event Management",
-            "projects.login.title": "LoginWithJava",
-            "projects.card.title": "Business Card App",
             "projects.fuel.title": "Fuel Prices Analysis - Ribera Alta & La Costera",
 
             // Technologies (Tags)
@@ -265,8 +257,6 @@ const resources = {
             "projects.bedrock.tags": ["AI", "AWS Bedrock", "Python"],
             "projects.vision.tags": ["Python", "Computer Vision"],
             "projects.events.tags": ["Kotlin", "Android", "Firebase"],
-            "projects.login.tags": ["Java", "JavaFX", "Maven"],
-            "projects.card.tags": ["Kotlin", "Android"],
             "projects.fuel.tags": ["Python", "MongoDB", "Docker", "Streamlit", "Big Data"],
 
 
@@ -284,8 +274,6 @@ const resources = {
             "projects.bedrock.desc": "Intelligent agent powered by Amazon Bedrock for PDF document analysis. Enables conversational interaction with technical notes and documents.",
             "projects.vision.desc": "Visual search system for finding similar images through computer vision analysis. Locates files within local directories based on feature extraction from an input photo.",
             "projects.events.desc": "Mobile application for organizing and managing events. Enables efficient creation, editing, and management of calendars and attendees on Android devices.",
-            "projects.login.desc": "Authentication system developed with Java and JavaFX. Provides an intuitive interface for login and user management using a Maven-based architecture.",
-            "projects.card.desc": "Development of an interactive visual interface in Kotlin. Mobile application designed to dynamically display contact information within the Android ecosystem.",
             "projects.fuel.desc": "ETL tool and interactive dashboard to monitor the evolution of gasoline and diesel prices through the Ministry of Industry API.",
             "projects.deepstudy.desc": "A RAG‑based platform that enables conversational queries over a collection of PDF documents. It extracts relevant information intelligently and in a structured way using Large Language Models.",
 

@@ -78,7 +78,7 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, y: -12 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.6 }}
-                    className="pointer-events-none flex justify-center pt-28 md:pt-32"
+                    className="pointer-events-none flex justify-center pt-20 md:pt-24"
                 >
                     <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-slate-200 backdrop-blur-md"
                         style={{ background: 'rgba(15,10,40,0.5)', border: '1px solid rgba(139,92,246,0.35)' }}>
@@ -92,7 +92,7 @@ const Hero = ({ data }) => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="relative z-10 flex min-h-screen flex-col justify-end pb-20 md:pb-16 max-w-2xl"
+                    className="relative z-10 flex min-h-screen flex-col justify-center pb-16 mr-auto max-w-xl"
                 >
                     <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3 drop-shadow">
                         {t('hero.greeting')}
