@@ -8,7 +8,7 @@ const Hero = ({ data }) => {
     const { t } = useTranslation();
 
     return (
-        <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-32 md:pt-40 pb-16 md:pb-24">
+        <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-20 md:pt-28 lg:pt-40 pb-16 md:pb-24 lg:pb-32 min-h-screen">
             {/* Resplandor suave editorial */}
             <div className="pointer-events-none absolute -top-40 -right-40 h-[560px] w-[560px] rounded-full bg-brand-violet/12 blur-[130px]" />
             <div className="pointer-events-none absolute top-1/3 -left-40 h-[420px] w-[420px] rounded-full bg-brand-cyan/8 blur-[120px]" />
