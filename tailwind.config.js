@@ -12,6 +12,7 @@ export default {
                     violet: "#8b5cf6",
                     indigo: "#6366f1",
                     cyan: "#22d3ee",
+                    sky: "#38bdf8",
                     pink: "#ec4899",
                 },
             },

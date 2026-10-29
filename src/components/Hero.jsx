@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useMemo, useRef, useState, useEffect, Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Mail, Send } from 'lucide-react';
+import { ArrowDown, Github, Linkedin, Mail, Send, MousePointer2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from './Typewriter';
 
-const Hero = ({ data }) => {
-    const { t } = useTranslation();
+const Experience3D = lazy(() => import('./Experience3D'));
 
+function supportsWebGL() {
+    try {
+        const canvas = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext && (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+    } catch {
+        return false;
+    }
+}
+
+/* Fallback mientras carga el 3D (o si no hay WebGL): aurora calmada */
+function AuroraFallback() {
     return (
-        <section id="top" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-            {/* Fondo aurora: orbes de color desenfocados */}
-            <div className="absolute inset-0 bg-[#f4f6fb] dark:bg-[#07060f]" />
+        <div className="absolute inset-0 bg-[#f4f6fb] dark:bg-[#07060f]">
             <motion.div
                 animate={{ scale: [1, 1.2, 1], x: [0, 40, 0], opacity: [0.5, 0.8, 0.5] }}
                 transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
@@ -26,83 +34,106 @@ const Hero = ({ data }) => {
                 transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
                 className="absolute -bottom-40 left-1/3 h-[480px] w-[480px] rounded-full bg-brand-indigo/20 dark:bg-brand-indigo/20 blur-[130px]"
             />
-
-            {/* Retícula sutil + viñeta para legibilidad */}
             <div className="absolute inset-0 bg-grid opacity-40" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-[#07060f]" />
+        </div>
+    );
+}
 
-            <div className="relative container mx-auto px-6 text-center z-10 py-28">
+const Hero = ({ data }) => {
+    const { t } = useTranslation();
+    const sceneRef = useRef(null);
+    const [visible, setVisible] = useState(true);
+    const webglOk = useMemo(() => supportsWebGL(), []);
+
+    useEffect(() => {
+        const el = sceneRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0 });
+        obs.observe(el);
+        return () => obs.disconnect();
+    }, []);
+
+    const show3D = webglOk && visible;
+
+    return (
+        <section id="top" className="relative min-h-screen flex items-stretch overflow-hidden">
+            {/* Escena 3D (se desmonta al salir de pantalla para liberar GPU) */}
+            <div ref={sceneRef} className="absolute inset-0">
+                {show3D ? (
+                    <Suspense fallback={<AuroraFallback />}>
+                        <Experience3D projects={data.projects} t={t} />
+                    </Suspense>
+                ) : (
+                    <AuroraFallback />
+                )}
+            </div>
+
+            {/* Transición suave a la siguiente sección */}
+            <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-[#f4f6fb] dark:to-[#07060f] pointer-events-none" />
+
+            {/* Overlay de contenido (no bloquea la interacción 3D salvo botones) */}
+            <div className="relative flex-1 px-6 pointer-events-none">
+                {/* Pista de interacción */}
                 <motion.div
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={{ opacity: 0, y: -12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
+                    transition={{ delay: 1, duration: 0.6 }}
+                    className="pointer-events-none flex justify-center pt-28 md:pt-32"
                 >
-                    {/* Foto con anillo de gradiente */}
-                    <div className="relative inline-block mb-8">
-                        <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-brand-violet via-brand-indigo to-brand-cyan opacity-80 blur-[2px]" />
-                        <div className="absolute h-28 w-28 rounded-full bg-brand-violet/40 blur-2xl animate-pulse-soft" />
-                        <img
-                            src="/assets/images/profile.png"
-                            alt={data.name}
-                            className="relative h-28 w-28 md:h-36 md:w-36 rounded-full object-cover border-4 border-white/80 dark:border-[#0c0a1f] shadow-glass-lg"
-                        />
-                    </div>
+                    <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-slate-200 backdrop-blur-md"
+                        style={{ background: 'rgba(15,10,40,0.5)', border: '1px solid rgba(139,92,246,0.35)' }}>
+                        <MousePointer2 size={13} className="text-brand-violet" />
+                        {t('hero.hint')}
+                    </span>
+                </motion.div>
 
-                    <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.35em] text-brand-violet mb-5">
+                {/* Contenido principal abajo-izquierda */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className="relative z-10 flex min-h-screen flex-col justify-end pb-20 md:pb-16 max-w-2xl"
+                >
+                    <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.3em] text-brand-sky mb-3 drop-shadow">
                         {t('hero.greeting')}
                     </h2>
-
-                    <h1 className="text-5xl md:text-8xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
+                    <h1 className="text-4xl md:text-7xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] mb-4">
                         {data.name}
                     </h1>
-
-                    <div className="text-lg md:text-2xl text-slate-600 dark:text-slate-300 font-mono mb-8 min-h-[36px]">
-                        <span className="text-brand-violet">&gt;</span>{' '}
+                    <div className="text-lg md:text-2xl font-mono text-slate-200 mb-6 min-h-[32px] drop-shadow">
+                        <span className="text-brand-sky">&gt;</span>{' '}
                         <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
                     </div>
-
-                    <p className="text-base md:text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed mb-10">
+                    <p className="text-sm md:text-base text-slate-300 max-w-lg leading-relaxed mb-8">
                         {t('about.description')}
                     </p>
 
-                    <div className="flex flex-wrap justify-center gap-4 mb-12">
+                    <div className="flex flex-wrap items-center gap-3 pointer-events-auto">
                         <a href={`mailto:${data.email}`} className="btn-primary">
-                            <Send size={18} />
+                            <Send size={17} />
                             {t('hero.contactMe')}
                         </a>
-                        <a
-                            href="#projects"
-                            className="inline-flex items-center gap-2 font-semibold rounded-full px-7 py-3 glass text-slate-700 dark:text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glass-lg"
-                        >
+                        <a href="#projects"
+                            className="inline-flex items-center gap-2 font-semibold rounded-full px-6 py-2.5 text-sm bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 transition-all duration-300">
                             {t('projects.viewProject')}
-                            <ArrowDown size={18} />
+                            <ArrowDown size={16} />
                         </a>
-                    </div>
-
-                    <div className="flex justify-center gap-4">
-                        <a href={data.social.github} target="_blank" rel="noopener noreferrer"
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
-                            <Github size={20} />
-                        </a>
-                        <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer"
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
-                            <Linkedin size={20} />
-                        </a>
-                        <a href={`mailto:${data.email}`}
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
-                            <Mail size={20} />
-                        </a>
+                        <div className="flex items-center gap-2">
+                            <a href={data.social.github} target="_blank" rel="noopener noreferrer"
+                                className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
+                                <Github size={18} />
+                            </a>
+                            <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer"
+                                className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
+                                <Linkedin size={18} />
+                            </a>
+                            <a href={`mailto:${data.email}`}
+                                className="p-2.5 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/25 hover:bg-white/20 hover:-translate-y-0.5 transition-all duration-300">
+                                <Mail size={18} />
+                            </a>
+                        </div>
                     </div>
                 </motion.div>
-
-                <motion.a
-                    href="#about"
-                    animate={{ y: [0, 10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 text-slate-500 dark:text-slate-400 hover:text-brand-violet transition-colors"
-                >
-                    <ArrowDown size={22} />
-                </motion.a>
             </div>
         </section>
     );

@@ -27,6 +27,7 @@ export default [
                 requestAnimationFrame: 'readonly',
                 cancelAnimationFrame: 'readonly',
                 ResizeObserver: 'readonly',
+                IntersectionObserver: 'readonly',
                 performance: 'readonly',
                 matchMedia: 'readonly',
             },
@@ -45,6 +46,13 @@ export default [
             'no-unused-vars': 'off',
             'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
             'react-hooks/set-state-in-effect': 'off',
+        },
+    },
+    {
+        // React Three Fiber: props como attach/args/position son válidas
+        files: ['src/components/Experience3D.jsx'],
+        rules: {
+            'react/no-unknown-property': 'off',
         },
     },
 ];
