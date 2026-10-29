@@ -22,9 +22,10 @@ const ScrollToTop = () => {
                     exit={{ opacity: 0, scale: 0.5 }}
                     onClick={scrollToTop}
                     aria-label="Volver arriba"
-                    className="fixed bottom-8 right-8 z-40 p-3 rounded-2xl glass-strong text-brand-violet hover:text-white hover:bg-gradient-to-tr hover:from-brand-violet hover:to-brand-indigo shadow-glass-lg transition-all duration-300"
+                    className="fixed bottom-8 right-8 z-40 p-3 rounded-full text-white shadow-card-lg transition-all duration-300"
+                    style={{ background: 'linear-gradient(135deg, #6d5cf6, #5b5bd6)' }}
                 >
-                    <ArrowUp size={22} />
+                    <ArrowUp size={20} />
                 </motion.button>
             )}
         </AnimatePresence>

@@ -1,98 +1,103 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Send } from 'lucide-react';
+import { ArrowUpRight, Github, Linkedin, Mail, Send, MapPin } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Typewriter from './Typewriter';
-import ProjectMarquee from './ProjectMarquee';
-
-/* Fondo aurora (ligero, 100% CSS) */
-function AuroraBackground() {
-    return (
-        <div className="absolute inset-0 bg-[#f2f5fb] dark:bg-[#08070f]">
-            <motion.div
-                animate={{ scale: [1, 1.2, 1], x: [0, 40, 0], opacity: [0.5, 0.75, 0.5] }}
-                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -top-32 -left-24 h-[520px] w-[520px] rounded-full bg-brand-violet/25 dark:bg-brand-violet/20 blur-[130px]"
-            />
-            <motion.div
-                animate={{ scale: [1, 1.3, 1], y: [0, -50, 0], opacity: [0.4, 0.65, 0.4] }}
-                transition={{ duration: 18, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute top-1/3 -right-32 h-[560px] w-[560px] rounded-full bg-brand-cyan/20 dark:bg-brand-cyan/15 blur-[140px]"
-            />
-            <motion.div
-                animate={{ scale: [1, 1.15, 1], x: [0, -40, 0], opacity: [0.35, 0.6, 0.35] }}
-                transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-                className="absolute -bottom-40 left-1/3 h-[480px] w-[480px] rounded-full bg-brand-indigo/20 dark:bg-brand-indigo/20 blur-[130px]"
-            />
-            <div className="absolute inset-0 bg-grid opacity-40" />
-        </div>
-    );
-}
 
 const Hero = ({ data }) => {
     const { t } = useTranslation();
 
     return (
-        <section id="top" className="relative min-h-screen flex flex-col overflow-hidden">
-            <AuroraBackground />
+        <section id="top" className="relative overflow-hidden px-6 md:px-8 pt-32 md:pt-40 pb-16 md:pb-24">
+            {/* Resplandor suave editorial */}
+            <div className="pointer-events-none absolute -top-40 -right-40 h-[560px] w-[560px] rounded-full bg-brand-violet/12 blur-[130px]" />
+            <div className="pointer-events-none absolute top-1/3 -left-40 h-[420px] w-[420px] rounded-full bg-brand-cyan/8 blur-[120px]" />
 
-            {/* Intro centrada */}
-            <div className="relative container mx-auto px-6 flex-1 flex flex-col items-center justify-center text-center py-20">
+            <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+                {/* Texto */}
                 <motion.div
-                    initial={{ opacity: 0, y: -20 }}
+                    initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
-                    className="max-w-3xl"
+                    transition={{ duration: 0.7, ease: 'easeOut' }}
                 >
-                    <h2 className="text-sm md:text-base font-semibold uppercase tracking-[0.35em] text-brand-violet mb-4">
-                        {t('hero.greeting')}
-                    </h2>
-                    <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white text-balance mb-5">
+                    <span className="kicker mb-6 inline-block">{t('hero.greeting')}</span>
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-5" style={{ letterSpacing: '-0.035em' }}>
                         {data.name}
                     </h1>
-                    <div className="text-lg md:text-2xl font-mono text-slate-600 dark:text-slate-300 mb-7 min-h-[32px]">
+                    <div className="text-lg md:text-2xl font-mono text-slate-500 dark:text-slate-400 mb-6 min-h-[32px]">
                         <span className="text-brand-violet">&gt;</span>{' '}
                         <Typewriter words={[t('hero.role1'), t('hero.role2')]} />
                     </div>
-                    <p className="text-sm md:text-lg text-slate-500 dark:text-slate-400 leading-relaxed mb-9 max-w-2xl mx-auto">
+                    <p className="max-w-md text-base md:text-lg leading-relaxed text-slate-500 dark:text-slate-400 mb-9">
                         {t('about.description')}
                     </p>
 
-                    <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                    <div className="flex flex-wrap items-center gap-3 mb-8">
                         <a href={`mailto:${data.email}`} className="btn-primary">
                             <Send size={17} />
                             {t('hero.contactMe')}
                         </a>
-                        <div className="flex items-center gap-2">
+                        <a href="#projects" className="btn-ghost">
+                            {t('projects.viewProject')}
+                            <ArrowUpRight size={17} />
+                        </a>
+                        <div className="flex items-center gap-1.5 ml-1">
                             <a href={data.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
-                                className="p-2.5 glass rounded-full text-slate-600 dark:text-slate-300 hover:text-brand-violet hover:-translate-y-0.5 transition-all duration-300">
+                                className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                                 <Github size={18} />
                             </a>
                             <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
-                                className="p-2.5 glass rounded-full text-slate-600 dark:text-slate-300 hover:text-brand-violet hover:-translate-y-0.5 transition-all duration-300">
+                                className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                                 <Linkedin size={18} />
                             </a>
                             <a href={`mailto:${data.email}`} aria-label="Correo"
-                                className="p-2.5 glass rounded-full text-slate-600 dark:text-slate-300 hover:text-brand-violet hover:-translate-y-0.5 transition-all duration-300">
+                                className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                                 <Mail size={18} />
                             </a>
                         </div>
                     </div>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                        <span className="chip"><MapPin size={12} /> {data.location}</span>
+                        <span className="chip">
+                            <span className="relative flex h-2 w-2">
+                                <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                            </span>
+                            {t('about.hl_available_value')}
+                        </span>
+                    </div>
+                </motion.div>
+
+                {/* Foto */}
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.7, delay: 0.15, ease: 'easeOut' }}
+                    className="relative mx-auto w-full max-w-md lg:max-w-none"
+                >
+                    <div className="pointer-events-none absolute -inset-4 rounded-[2.5rem] bg-gradient-to-tr from-brand-violet/25 via-transparent to-brand-cyan/20 blur-2xl" />
+                    <div className="relative overflow-hidden rounded-[2rem] border border-slate-200/80 bg-slate-100 shadow-card-lg dark:border-white/10 dark:bg-white/5 aspect-[4/5]">
+                        <img src="/assets/images/profile.png" alt={data.name} className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/25 via-transparent to-transparent" />
+
+                        {/* Nombre en la foto */}
+                        <div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-2xl bg-white/80 px-4 py-3 backdrop-blur-md dark:bg-[#0d0d16]/70 dark:border dark:border-white/10">
+                            <div>
+                                <p className="text-sm font-bold text-slate-900 dark:text-white">{data.name}</p>
+                                <p className="text-xs text-slate-500 dark:text-slate-400">{t('hero.role1')}</p>
+                            </div>
+                            <span className="chip chip-brand">{t('about.hl_available').toUpperCase()}</span>
+                        </div>
+
+                        {/* Badge flotante */}
+                        <div className="absolute right-4 top-4 rounded-full px-3 py-1.5 text-[11px] font-mono font-bold text-white"
+                            style={{ background: 'linear-gradient(135deg, #6d5cf6, #5b5bd6)' }}>
+                            AI · Big Data
+                        </div>
+                    </div>
                 </motion.div>
             </div>
-
-            {/* Marcador de proyectos a pantalla completa */}
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="relative pb-10 md:pb-14"
-            >
-                <ProjectMarquee projects={data.projects} />
-            </motion.div>
-
-            {/* Transición a la siguiente sección */}
-            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#f2f5fb] dark:to-[#08070f] pointer-events-none" />
         </section>
     );
 };

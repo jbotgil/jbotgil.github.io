@@ -16,11 +16,7 @@ function App() {
 
     return (
         <ThemeProvider>
-            <div className="min-h-screen font-sans bg-grid relative">
-                <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
-                    <div className="absolute -top-40 -left-40 h-[480px] w-[480px] rounded-full bg-brand-violet/10 dark:bg-brand-violet/15 blur-[130px]" />
-                    <div className="absolute top-1/3 -right-40 h-[520px] w-[520px] rounded-full bg-brand-cyan/10 dark:bg-brand-cyan/10 blur-[140px]" />
-                </div>
+            <div className="min-h-screen font-sans relative overflow-x-hidden">
                 <Nav />
                 <main>
                     <Hero data={portfolioData} />

@@ -1,53 +1,59 @@
 import React from 'react';
-import { Github, Heart, Linkedin, Mail, Send } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Github, Linkedin, Mail, Heart, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = ({ data }) => {
     const { t } = useTranslation();
 
     return (
-        <footer id="contact" className="relative px-6 py-24 lg:py-32">
-            <div className="max-w-3xl mx-auto">
-                <div className="relative text-center">
-                    <div className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-brand-violet/20 blur-[110px]" />
-                    <div className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-brand-cyan/15 blur-[110px]" />
+        <footer id="contact" className="px-6 md:px-8 py-20 md:py-28">
+            <div className="mx-auto max-w-6xl">
+                <div className="rule">
+                    <span className="kicker">06 · {t('nav.contact')}</span>
+                    <div className="rule-line" />
+                </div>
 
-                    <span className="pill relative mb-5"><Mail size={12} /> {t('contact.title')}</span>
-                    <h2 className="relative text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
-                        <span className="text-gradient">{t('contact.subtitle')}</span>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ duration: 0.5 }}
+                    className="mx-auto max-w-3xl text-center"
+                >
+                    <h2 className="text-4xl md:text-6xl font-black tracking-tight text-slate-900 dark:text-white text-balance mb-6" style={{ letterSpacing: '-0.03em' }}>
+                        {t('contact.subtitle')} <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(135deg,#6d5cf6,#5b5bd6)' }}>{t('contact.title')}</span>
                     </h2>
-                    <p className="relative text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-lg mb-10">
+                    <p className="text-lg text-slate-500 dark:text-slate-400 mb-10">
                         {t('contact.description')}
                     </p>
 
-                    <div className="relative flex flex-wrap justify-center gap-4 mb-14">
-                        <a href={`mailto:${data.email}`} className="btn-primary !px-8 !py-4 text-base">
-                            <Send size={19} />
-                            {data.email}
-                        </a>
-                    </div>
+                    <a href={`mailto:${data.email}`} className="btn-primary !px-8 !py-4 text-base mb-12">
+                        <Send size={19} />
+                        {data.email}
+                    </a>
 
-                    <div className="relative flex justify-center gap-4 mb-12">
-                        <a href={data.social.github} target="_blank" rel="noopener noreferrer"
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
+                    <div className="flex items-center justify-center gap-2 mb-14">
+                        <a href={data.social.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub"
+                            className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                             <Github size={20} />
                         </a>
-                        <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer"
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
+                        <a href={data.social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                            className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                             <Linkedin size={20} />
                         </a>
-                        <a href={`mailto:${data.email}`}
-                            className="p-3 glass rounded-2xl text-slate-600 dark:text-slate-300 transition-all duration-300 hover:text-brand-violet hover:-translate-y-1 hover:shadow-glass">
+                        <a href={`mailto:${data.email}`} aria-label="Correo"
+                            className="p-2.5 rounded-full text-slate-500 hover:text-brand-violet hover:bg-brand-violet/10 transition-all">
                             <Mail size={20} />
                         </a>
                     </div>
+                </motion.div>
 
-                    <div className="relative text-sm text-slate-500 dark:text-slate-400">
-                        <p className="flex items-center justify-center gap-1.5">
-                            {t('footer.made_with')} <Heart size={14} className="text-brand-pink fill-current" /> {t('footer.by')} {data.name}
-                        </p>
-                        <p className="mt-2">© {new Date().getFullYear()} {t('footer.rights')}</p>
-                    </div>
+                <div className="border-t border-slate-200 dark:border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-400 dark:text-slate-500">
+                    <p className="flex items-center gap-1.5">
+                        {t('footer.made_with')} <Heart size={13} className="text-brand-violet fill-current" /> {t('footer.by')} {data.name}
+                    </p>
+                    <p>© {new Date().getFullYear()} {t('footer.rights')}</p>
                 </div>
             </div>
         </footer>

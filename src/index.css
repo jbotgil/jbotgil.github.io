@@ -8,92 +8,73 @@
     }
 
     body {
-        @apply bg-[#f4f6fb] text-slate-700 font-sans antialiased dark:bg-[#07060f] dark:text-slate-200 selection:bg-brand-violet/70 selection:text-white transition-colors duration-300;
+        @apply bg-[#f9fafc] text-slate-700 font-sans antialiased dark:bg-[#09090f] dark:text-slate-300 transition-colors duration-300;
+    }
+
+    ::selection {
+        @apply bg-brand-violet/20 text-slate-900 dark:text-white;
     }
 
     ::-webkit-scrollbar {
-        @apply w-2;
+        @apply w-2.5;
     }
     ::-webkit-scrollbar-track {
         @apply bg-transparent;
     }
     ::-webkit-scrollbar-thumb {
-        @apply rounded-full bg-slate-400/50 dark:bg-slate-600;
+        @apply rounded-full bg-slate-300 dark:bg-slate-700;
     }
     ::-webkit-scrollbar-thumb:hover {
-        @apply bg-slate-400 dark:bg-slate-500;
+        @apply bg-slate-400 dark:bg-slate-600;
     }
 }
 
 @layer components {
-    /* Superficie de cristal que se adapta a claro/oscuro */
-    .glass {
-        @apply bg-white/60 border border-slate-900/10 backdrop-blur-xl dark:bg-white/[0.05] dark:border-white/10;
-        box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.08);
+    /* Etiqueta editorial (sección numerada) */
+    .kicker {
+        @apply text-[11px] font-bold font-mono uppercase tracking-[0.28em] text-brand-violet;
     }
 
-    /* Cristal más elevado/destacado */
-    .glass-strong {
-        @apply bg-white/75 border border-slate-900/10 backdrop-blur-2xl dark:bg-white/[0.08] dark:border-white/15;
-        box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.18);
+    /* Tarjeta blanca minimalista */
+    .card {
+        @apply bg-white border border-slate-200/80 rounded-2xl shadow-card dark:bg-white/[0.04] dark:border-white/10;
     }
 
-    /* Título con gradiente de marca (violet → cyan) */
-    .text-gradient {
-        @apply bg-clip-text text-transparent;
-        background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 45%, #22d3ee 100%);
-        background-size: 200% 200%;
+    .card-hover {
+        @apply transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card-lg;
     }
 
-    /* Botón primario glass con glow */
+    /* Botones */
     .btn-primary {
-        @apply inline-flex items-center gap-2 font-semibold rounded-full px-7 py-3 text-white transition-all duration-300;
-        background-image: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
-        box-shadow: 0 10px 30px -10px rgba(139, 92, 246, 0.6);
+        @apply inline-flex items-center gap-2 font-semibold rounded-full px-6 py-3 text-white transition-all duration-200;
+        background: linear-gradient(135deg, #6d5cf6, #5b5bd6);
+        box-shadow: 0 10px 26px -10px rgba(109, 92, 246, 0.55);
     }
     .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 40px -12px rgba(139, 92, 246, 0.7);
+        transform: translateY(-1px);
+        box-shadow: 0 16px 34px -12px rgba(109, 92, 246, 0.7);
     }
 
-    /* Etiqueta pequeña (pill) para lanzaderas de sección */
-    .pill {
-        @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] rounded-full px-4 py-1.5 glass text-brand-violet dark:text-brand-violet;
+    .btn-ghost {
+        @apply inline-flex items-center gap-2 font-semibold rounded-full px-6 py-3 border border-slate-300 text-slate-700 dark:border-white/15 dark:text-slate-200 transition-colors hover:border-slate-400 dark:hover:border-white/30;
+    }
+
+    /* Chip mono */
+    .chip {
+        @apply inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 dark:bg-white/5 dark:text-slate-300 dark:border-white/10;
+    }
+
+    .chip-brand {
+        @apply text-brand-violet bg-brand-violet/10 border-brand-violet/20;
     }
 }
 
 @layer utilities {
-    /* Marcador infinito (marquee) */
-    .marquee-track {
-        display: flex;
-        width: max-content;
-        animation: marquee 38s linear infinite;
+    /* Encabezado numerado de sección */
+    .rule {
+        @apply flex items-center gap-4 mb-12 md:mb-16;
     }
-    .marquee-track:hover {
-        animation-play-state: paused;
-    }
-    @media (prefers-reduced-motion: reduce) {
-        .marquee-track {
-            animation: none;
-        }
-    }
-    @keyframes marquee {
-        to {
-            transform: translateX(-50%);
-        }
-    }
-
-    /* Retícula sutil de fondo */
-    .bg-grid {
-        background-image:
-            linear-gradient(rgba(100, 116, 139, 0.07) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(100, 116, 139, 0.07) 1px, transparent 1px);
-        background-size: 56px 56px;
-    }
-
-    /* Recorte de texto con tipo grande que atraviesa el hero */
-    .outline-text {
-        -webkit-text-stroke: 1px rgba(139, 92, 246, 0.35);
-        color: transparent;
+    .rule-line {
+        @apply h-px flex-1 bg-slate-200 dark:bg-white/10;
     }
 }
